@@ -4,7 +4,9 @@ The documentation is organized by the questions a technical reviewer will ask.
 
 | Section | Purpose |
 |---|---|
+| [`demo_script.md`](demo_script.md) | 60-second product demo and 5-minute technical walkthrough |
 | [`demo_walkthrough.md`](demo_walkthrough.md) | Fast reading path through the benchmark task and concrete results |
+| [`reviewer_checklist.md`](reviewer_checklist.md) | Quick verification checklist for what is built, evidenced, and still open |
 | [`reproducibility.md`](reproducibility.md) | Local setup, Claude Code setup, and rerun checklist |
 | [`research/`](research/) | Theory, decomposition, and experiment protocol |
 | [`engineering/`](engineering/) | Runtime architecture and operational design |

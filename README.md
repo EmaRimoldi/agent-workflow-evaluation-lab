@@ -1,7 +1,8 @@
 # AgentOps Lab
 
-AgentOps Lab is an experimental harness for comparing AI-agent work patterns on
-a concrete ML optimization task.
+AgentOps Lab is a benchmark harness for measuring whether AI-agent workflows
+actually improve search quality, cost, and auditability on a concrete ML
+optimization task.
 
 The built-in benchmark is `autoresearch/`: agents edit a CIFAR-10 `train.py`,
 run evaluations, and try to reduce `val_bpb` (validation loss; lower is better).
@@ -9,13 +10,18 @@ The repo then compares whether the search works better as one long-running
 agent, independent parallel agents, memory-augmented agents, a blackboard swarm,
 or a post-hoc merge.
 
-Start with:
+## 60-Second Review Path
 
-- [`docs/demo_walkthrough.md`](docs/demo_walkthrough.md) for a concrete path
-  through the results.
-- [`studies/README.md`](studies/README.md) for the study-by-study map.
-- [`docs/reproducibility.md`](docs/reproducibility.md) for local and
-  Claude Code setup.
+If you are reviewing this repository quickly:
+
+1. Read [`docs/demo_script.md`](docs/demo_script.md) for the short product demo.
+2. Read [`docs/demo_walkthrough.md`](docs/demo_walkthrough.md) for the concrete
+   result path.
+3. Read [`docs/reviewer_checklist.md`](docs/reviewer_checklist.md) to verify
+   what is built, what is evidence, and what is still open.
+4. Use [`studies/README.md`](studies/README.md) for the study-by-study map.
+5. Use [`docs/reproducibility.md`](docs/reproducibility.md) for local and
+   Claude Code setup.
 
 ## What This Is For
 
@@ -30,6 +36,10 @@ workflow is worth running:
   noise?
 - Can an agent run be replayed, inspected, and defended?
 
+The narrow product wedge is AI-agent evaluation for teams that need to decide
+whether a more complex agent workflow is worth the extra cost before trusting it
+with long-running or expensive work.
+
 ## Concrete Evidence In This Repo
 
 The checked-in `studies/` directory is the demo surface. It contains curated
@@ -43,6 +53,26 @@ Key examples:
 | Shared memory effect | P12 shared-memory exploration found better and more stable results than P11 high-temperature exploration without memory: best `0.914` vs `0.934`, mean `1.049` vs `1.816` | [`studies/bp_probe_ablation/results/probe_ablation_summary.md`](studies/bp_probe_ablation/results/probe_ablation_summary.md) |
 | Deterministic evaluator | Five baseline runs produced identical `val_bpb = 0.811222`, removing training noise as the main explanation | [`studies/calibration_design/results/calibration_design_summary.md`](studies/calibration_design/results/calibration_design_summary.md) |
 | Early pilot | First 2x2 pilot built the instrumentation and exposed why the task and estimators needed redesign | [`studies/bp_implementation/results/implementation_pilot_summary.md`](studies/bp_implementation/results/implementation_pilot_summary.md) |
+
+## What Works Today
+
+- A runnable Python package and `agentops` CLI.
+- Isolated AutoResearch workspaces where agents edit one controlled `train.py`.
+- Execution modes for single-agent, parallel, shared-memory, swarm, and merge
+  workflows.
+- Blackboard/shared-memory primitives with tests.
+- Certified-time, diversity, snapshotting, reasoning-trace, and calibration
+  utilities.
+- Curated study evidence with figures and result tables.
+
+## What This Does Not Claim Yet
+
+- It is not a general benchmark for all agent tasks.
+- It does not claim the BP theory is fully empirically validated.
+- It does not claim shared memory always helps; current evidence says it reduces
+  harmful exploration in a specific probe.
+- Historical runs are not bit-for-bit reproducible because model services and
+  agent decisions can change over time.
 
 ## Core Capabilities
 
@@ -80,7 +110,9 @@ docs/
   research/                     BP decomposition and experiment protocols
   engineering/                  architecture and runtime design
   evals/                        certified time, calibration, capacity docs
+  demo_script.md                60-second demo narrative and evidence path
   demo_walkthrough.md           guided reading path through concrete results
+  reviewer_checklist.md         what a reviewer can verify quickly
   reproducibility.md            local setup and Claude Code reproduction notes
 
 studies/
