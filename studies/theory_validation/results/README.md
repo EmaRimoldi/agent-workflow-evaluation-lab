@@ -1,86 +1,70 @@
-# Theory Validation Bundle
+# Theory Validation Study
 
-This folder is a self-contained bundle for auditing, stress-testing, and refining the AutoResearch BP theory.
+This folder audits the mathematical frame behind AgentOps Lab. It is not a
+claim that the theory has been empirically validated.
 
 Current status:
 
-> **promising but not yet rigorous**
+> cleaner theory, upgraded estimators, insufficient empirical validation
 
-The theorem has been narrowed, the protocol and estimator layers have been upgraded, and targeted follow-up experiments have been run. The bundle now supports a much cleaner review than the original pilot-only package.
+## What The Study Did
 
-## Best Reading Order
+The study started from an AutoResearch BP theory note and asked whether the
+theorem, estimators, and pilot evidence were strong enough to support the agent
+workflow claims.
 
-If you want the shortest path to the current conclusion:
+It performed:
 
-1. `analysis/final_verdict.md`
-2. `analysis/reanalysis_summary.md`
-3. `theory/autoresearch_bp_revised.pdf`
-4. `analysis/handoff_note.md`
+- a formal audit of the original theorem;
+- a refactor to a narrower single-axis theorem with explicit assumptions;
+- protocol upgrades for incumbent re-evaluation and provenance logging;
+- corrected mode-labeling and decomposition estimators;
+- repeated incumbent evaluations across the four pilot cells;
+- Jensen-gap checks for token and wall-clock cost;
+- verifier-noise and context-pressure analyses.
 
-If you want the core theory + empirical trace:
+## Reading Order
 
-1. `analysis/validation_strategy.md`
-2. `analysis/formal_theory_audit.md`
-3. `analysis/theorem_refactor_summary.md`
-4. `analysis/protocol_upgrade_spec.md`
-5. `analysis/estimator_design.md`
-6. `analysis/experiment_01_replicated_means.md`
-7. `analysis/experiment_02_cost_variance.md`
-8. `analysis/experiment_03_context_sweep.md`
-9. `theory/autoresearch_bp_revised.pdf`
+Shortest path to the current conclusion:
 
-## What Changed Since The First Bundle
+1. [`pass_02_summary.md`](pass_02_summary.md)
+2. [`analysis/final_verdict.md`](analysis/final_verdict.md)
+3. [`analysis/reanalysis_summary.md`](analysis/reanalysis_summary.md)
+4. [`analysis/formal_theory_audit.md`](analysis/formal_theory_audit.md)
+5. [`analysis/estimator_design.md`](analysis/estimator_design.md)
 
-This bundle now includes:
+Read the PDFs only if you are auditing the theory source material:
 
-- a narrower single-axis theorem with explicit Jensen remainder
-- protocol upgrades for incumbent reevaluation and provenance logging
-- corrected mode-labeling and decomposition estimators
-- repeated incumbent evaluations across all four cells
-- explicit Jensen-gap analysis for token and wall-clock cost
-- a context-pressure feasibility analysis
+1. [`theory/BP.pdf`](theory/BP.pdf)
+2. [`theory/autoresearch_bp.pdf`](theory/autoresearch_bp.pdf)
+
+## Theory Files
+
+- `theory/BP.pdf`: the Beneventano-Poggio source paper used as the theoretical
+  reference point for the decomposition.
+- `theory/autoresearch_bp.pdf`: the project-specific AutoResearch BP theory
+  note that this study audited.
+
+Plain-text PDF extractions and stale TeX intermediates were removed from the
+public tree. They duplicated the PDFs, were not the canonical source of truth,
+and made the theory folder look more authoritative than it was.
 
 ## Folder Structure
 
-### `theory/`
-
-- `autoresearch_bp.pdf`
-  The original AutoResearch theory PDF supplied for validation.
-- `autoresearch_bp_extracted.txt`
-  Plain-text extraction of the original theory PDF.
-- `BP.pdf`
-  The Beneventano--Poggio source paper.
-- `BP_extracted.txt`
-  Plain-text extraction of the BP paper.
-- `autoresearch_bp_revised.tex`
-  Current LaTeX source of the narrowed theory note.
-- `autoresearch_bp_revised.pdf`
-  Current best theory PDF.
-
 ### `analysis/`
 
-Key review files:
+Human-readable audit and follow-up analysis:
 
 - `final_verdict.md`
 - `reanalysis_summary.md`
-- `handoff_note.md`
-
-Formal / theorem files:
-
 - `formal_theory_audit.md`
 - `theorem_refactor_summary.md`
 - `validation_strategy.md`
-
-Protocol / estimator files:
-
 - `protocol_compliance_audit.md`
 - `protocol_upgrade_spec.md`
 - `protocol_upgrade_smoke_check.md`
 - `estimator_design.md`
 - `estimator_validation_note.md`
-
-Experiment summaries:
-
 - `experiment_01_replicated_means.md`
 - `experiment_02_cost_variance.md`
 - `experiment_03_context_sweep.md`
@@ -98,7 +82,7 @@ Machine-readable outputs:
 
 ### `artifacts/`
 
-Original pilot artifacts:
+Original pilot artifacts preserved for provenance:
 
 - `pilot_summary.md`
 - `pilot_raw_data.json`
@@ -107,56 +91,19 @@ Original pilot artifacts:
 - `decomposition_rep3.json`
 - `pilot_mapping.json`
 
-### `experiments/noise_assay/`
+### `figures/`
 
-Targeted verifier-noise follow-up:
+Reviewer-facing figures for replicated means, Jensen gap, corrected
+decomposition, noise assay, and context pressure.
 
-- `baseline/`
-- `best_d10/`
-- `noise_summary.json`
+## Main Finding
 
-Purpose:
+The original AutoResearch BP note was too strong. The defensible result is a
+narrower single-axis BP reduction with explicit extra assumptions and a Jensen
+remainder. The estimator and protocol layers are now much cleaner, but repeated
+incumbent evaluations still show overlapping uncertainty across the main cells,
+wall-clock Jensen gaps are large enough to matter, and the pilot does not supply
+enough accepted-mode support for stable `phi`, `G`, and `epsilon` estimates.
 
-- show that single-shot selection is unreliable
-- test whether the pilot-selected best `d10` candidate replicates
-
-### `experiments/followup_01/`
-
-Targeted post-refactor experiments:
-
-- `run_replicated_means.py`
-- `analyze_cost_variance.py`
-- `replicated_means_summary.json`
-- `cost_variance_summary.json`
-- `context_sweep_feasibility.json`
-- `replicated_means/`
-  Raw per-run logs from the repeated incumbent evaluations.
-
-Purpose:
-
-- estimate repeated incumbent means per cell
-- quantify Jensen-gap risk for `kappa_bar`
-- assess whether a real H5 context sweep is currently feasible
-
-### `code/`
-
-- `compute_decomposition.py`
-- `aggregate_pilot.py`
-- `label_modes.py`
-
-These are included so a future reviewer can inspect the exact estimator and aggregation logic used by the bundle.
-
-### `logs/`
-
-- `pilot_phase2.log`
-- `pilot_phase2_attempt1.log`
-
-Batch logs from the original pilot execution.
-
-## Main Findings In One Paragraph
-
-The original AutoResearch BP note was too strong. The current best theorem is a single-axis BP reduction with explicit extra assumptions and a Jensen remainder. The protocol now has a real reevaluation path and corrected estimator scaffolding, so the decomposition no longer collapses for implementation reasons alone. However, repeated incumbent evaluations still show overlapping uncertainty across the main cells, wall-clock Jensen gaps are large enough to matter, and the pilot still does not generate enough accepted-mode support for stable `phi`, `G`, and `epsilon` estimation. So the theory is now cleaner and more defensible, but still not validated empirically in this substrate.
-
-## Important Caveat
-
-This bundle is intended for analysis and review, not as a minimal rerun package. It keeps raw evidence, scripts, and summaries together so an external reviewer can reconstruct the logic of the verdict without asking for missing context.
+This is useful research infrastructure, not a finished theorem-to-benchmark
+validation.

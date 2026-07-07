@@ -8,8 +8,8 @@ Whether the current framework can enter a regime where H5 is actually testable, 
 
 Artifacts:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/context_pressure_metrics.json`
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/context_sweep_feasibility.json`
+- `context_pressure_metrics.json`
+- `../experiments/followup_01/context_sweep_feasibility.json`
 
 Procedure performed in this iteration:
 

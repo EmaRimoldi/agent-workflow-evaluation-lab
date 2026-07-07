@@ -1,79 +1,181 @@
 # Experiment Protocol
 
-## Running a matched experiment
+This protocol describes how to run a matched AgentOps Lab experiment using the
+canonical `agentops` CLI. For machine setup and Claude Code authentication, read
+[`../reproducibility.md`](../reproducibility.md) first.
 
-### Step 1: Run parallel mode
+## Core Question
+
+A matched experiment compares agent workflow modes on the same AutoResearch
+task:
+
+- `single-long`: one agent with a longer budget.
+- `parallel`: multiple independent agents.
+- `parallel-shared`: multiple agents with a shared result log.
+- `swarm`: blackboard-style coordination.
+- `merge`: post-hoc merge of candidates.
+
+The measured outcome is whether the workflow reaches a target `val_bpb` faster,
+cheaper, or more reliably than the baseline.
+
+## Preflight
+
+Run local checks:
 
 ```bash
-python scripts/run_parallel_experiment.py \
+uv sync --dev
+PYTHONPATH=src python -m pytest tests -q
+PYTHONPATH=src python -m agentops_lab.cli --help
+```
+
+Prepare data:
+
+```bash
+cd autoresearch
+uv run python prepare.py
+cd ..
+```
+
+Verify Claude Code:
+
+```bash
+claude --version
+claude doctor
+claude auth status
+```
+
+## Benchmark Baseline
+
+The current calibrated baseline comes from
+[`../../studies/baseline_headroom/README.md`](../../studies/baseline_headroom/README.md):
+
+```text
+baseline_id = width30_lr_low
+baseline val_bpb = 0.841354
+target q* = 0.824
+fixed-step evaluator = AUTOSEARCH_MAX_STEPS=1170
+```
+
+Use this baseline for new reviewer-grade comparisons unless a newer calibration
+study supersedes it.
+
+## Matched Run Pattern
+
+Use the same config, model, evaluator, target threshold, and wall-clock budget
+across modes.
+
+### Single long
+
+```bash
+uv run agentops single-long \
+  --config configs/experiment.yaml \
   --time-budget 30 \
   --train-budget 300 \
-  --experiment-id my_exp_001
+  --train-max-steps 1170 \
+  --serialized-evaluator \
+  --target-val-bpb 0.824 \
+  --success-confidence 0.80 \
+  --experiment-id pass06_single_long
 ```
 
-This launches 2 agents on GPU 0 and GPU 1 simultaneously, each with a 30-minute
-budget and 300s per training run. Wall-clock time: ~30 minutes.
-
-### Step 2: Run single-agent-longer mode
+### Independent parallel
 
 ```bash
-python scripts/run_single_long_experiment.py \
+uv run agentops parallel \
+  --config configs/experiment.yaml \
   --time-budget 30 \
   --train-budget 300 \
-  --experiment-id my_exp_001_single
+  --n-agents 2 \
+  --train-max-steps 1170 \
+  --serialized-evaluator \
+  --target-val-bpb 0.824 \
+  --success-confidence 0.80 \
+  --experiment-id pass06_parallel
 ```
 
-This launches 1 agent on GPU 0 with a 60-minute budget (2×30). Total compute
-matches the parallel run. Wall-clock time: ~60 minutes.
-
-### Step 3: Compare
+### Shared-memory parallel
 
 ```bash
-python scripts/compare_experiments.py \
-  runs/experiment_my_exp_001 \
-  runs/experiment_my_exp_001_single
+uv run agentops parallel-shared \
+  --config configs/experiment.yaml \
+  --time-budget 30 \
+  --train-budget 300 \
+  --n-agents 2 \
+  --train-max-steps 1170 \
+  --serialized-evaluator \
+  --target-val-bpb 0.824 \
+  --success-confidence 0.80 \
+  --experiment-id pass06_parallel_shared
 ```
 
-## Output structure
+### Swarm
 
+```bash
+uv run agentops swarm \
+  --run \
+  --config configs/experiment.yaml \
+  --time-budget 30 \
+  --train-budget 300 \
+  --n-agents 2 \
+  --experiment-id pass06_swarm
 ```
+
+The current swarm surface delegates to the integrated swarm runtime. Its
+blackboard can also be initialized independently:
+
+```bash
+uv run agentops swarm --blackboard-dir runs/pass06_swarm_blackboard
+```
+
+## Output Structure
+
+Agent runs write under `runs/` by default. The exact tree varies by mode, but a
+reviewable run should preserve:
+
+```text
 runs/
   experiment_<id>/
     config.json
-    mode_parallel/
+    mode_<mode>/
       agent_0/
-        workspace/         # git worktree (isolated)
+        workspace/
         logs/
-          run_agent.log    # agent session log
         results/
           trajectory.jsonl
           results.tsv
+          training_runs.jsonl
           metadata.json
           snapshots/
-      agent_1/             # same structure
       aggregate/
         combined_summary.json
         comparison_table.csv
         experiment_report.txt
-    mode_single_long/
-      agent_0/             # same structure
-      aggregate/
-    final_comparison/
-      parallel_vs_single.csv
-      final_report.md
 ```
 
-## Environment requirements
+## Analysis Pass
 
-- `claude` CLI installed and authenticated
-- `uv` installed (for running train.py)
-- 2 CUDA-capable GPUs for parallel mode (or 1 for single mode)
-- `autoresearch` submodule initialized: `git submodule update --init`
-- Data prepared: `cd autoresearch && uv run prepare.py`
+After runs finish:
 
-## Known best baseline
+1. Check that each agent has `results.tsv`, `trajectory.jsonl`, and logs.
+2. Recompute certified hitting-time if a target threshold was pre-registered:
 
-- val_bpb = 1.1020746984708296
-- Run: `exp_smart_20260330_063836 / agent_0 / iter0003_s350_bpb1.1021.py`
-- Hyperparameters: EMBEDDING_LR=0.8, UNEMBEDDING_LR=0.005, MATRIX_LR=0.06,
-  WEIGHT_DECAY=0.1, WARMDOWN_RATIO=0.4
+   ```bash
+   uv run agentops certified-time runs/experiment_<id> \
+     --target-val-bpb 0.824 \
+     --confidence 0.80
+   ```
+
+3. Compare modes only when evaluator settings, model, and target threshold match.
+4. Move final summaries, tables, and figures into a named `studies/<study>/`
+   folder. Do not commit raw transient workspaces unless they are needed for
+   provenance.
+
+## Caveats
+
+- Historical summaries are not guaranteed to be exactly reproducible because the
+  Claude Code binary, model snapshots, and service behavior may change.
+- `--serialized-evaluator` is recommended on shared machines to avoid
+  contention masquerading as a workflow effect.
+- A single replicate is a probe, not a confirmatory result.
+- Swarm historical baselines in `studies/swarm_baselines/` are context only;
+  they are not normalized rows for the current BP 2x2 decomposition.

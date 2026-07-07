@@ -4,15 +4,8 @@
 
 I ran a local synthetic smoke test that exercises the new protocol/logging path without needing the Claude CLI or a full training job.
 
-Artifacts:
-
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/smoke_summary.json`
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/agent_smoke/results/training_runs.jsonl`
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/agent_smoke/results/reevaluations.jsonl`
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/agent_smoke/results/turns.jsonl`
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/agent_smoke/results/metadata.json`
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/agent_smoke/snapshots/step_001/metadata.json`
-- `archives/pass_02_theory_validation_bundle_20260412/artifacts/protocol_smoke/agent_smoke/snapshots/step_002/metadata.json`
+The raw synthetic smoke-test artifact bundle is not included in the public tree.
+This note preserves the procedure, expected fields, and interpretation.
 
 The smoke test created:
 

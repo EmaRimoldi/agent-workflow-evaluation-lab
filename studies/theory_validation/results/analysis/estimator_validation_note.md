@@ -22,12 +22,12 @@ python scripts/compute_decomposition.py \
   --d10 runs/experiment_pilot_d10_rep1 \
   --d01 runs/experiment_pilot_d01_rep1 \
   --d11 runs/experiment_pilot_d11_rep1 \
-  --output archives/pass_02_theory_validation_bundle_20260412/analysis/estimator_validation_rep1.json
+  --output studies/theory_validation/results/analysis/estimator_validation_rep1.json
 ```
 
 Output:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/estimator_validation_rep1.json`
+- `estimator_validation_rep1.json`
 
 ## What Passed
 

@@ -9,8 +9,13 @@ The repo then compares whether the search works better as one long-running
 agent, independent parallel agents, memory-augmented agents, a blackboard swarm,
 or a post-hoc merge.
 
-Start with the guided walkthrough:
-[`docs/demo_walkthrough.md`](docs/demo_walkthrough.md).
+Start with:
+
+- [`docs/demo_walkthrough.md`](docs/demo_walkthrough.md) for a concrete path
+  through the results.
+- [`studies/README.md`](studies/README.md) for the study-by-study map.
+- [`docs/reproducibility.md`](docs/reproducibility.md) for local and
+  Claude Code setup.
 
 ## What This Is For
 
@@ -76,7 +81,7 @@ docs/
   engineering/                  architecture and runtime design
   evals/                        certified time, calibration, capacity docs
   demo_walkthrough.md           guided reading path through concrete results
-  positioning/                  public narrative for project framing
+  reproducibility.md            local setup and Claude Code reproduction notes
 
 studies/
   swarm_baselines/              blackboard coordination evidence
@@ -174,6 +179,7 @@ Start here:
 - [Reviewer-grade evaluation protocol](docs/evals/reviewer_grade_protocol.md)
 - [Baseline headroom calibration](docs/evals/baseline_headroom_calibration.md)
 - [Experiment protocol](docs/research/experiment_protocol.md)
+- [Reproducibility setup](docs/reproducibility.md)
 
 ## Repository Scope
 

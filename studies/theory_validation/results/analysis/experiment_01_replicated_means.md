@@ -8,9 +8,9 @@ Whether the apparent cell contrasts survive repeated evaluation once best-of-N o
 
 Artifacts:
 
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/run_replicated_means.py`
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/replicated_means_summary.json`
-- raw logs under `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/replicated_means/`
+- `../experiments/followup_01/run_replicated_means.py`
+- `../experiments/followup_01/replicated_means_summary.json`
+- raw logs under `../experiments/followup_01/replicated_means/`
 
 Procedure:
 

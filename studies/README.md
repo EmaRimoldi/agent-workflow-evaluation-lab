@@ -1,17 +1,161 @@
 # Studies
 
-This directory contains curated experiment evidence for AgentOps Lab.
+This directory is the empirical spine of AgentOps Lab. Each study should be read
+with the same rhythm:
 
-Each subdirectory is a named study with preserved result bundles that support
-the evaluation docs under [`docs/evals/`](../docs/evals/) and the research
-protocol under [`docs/research/`](../docs/research/).
+1. What question was being tested?
+2. What was actually run?
+3. What did the run show?
+4. What caveat or failure did it expose?
+5. Which file should a reviewer read first?
 
-- `swarm_baselines/`: early blackboard/swarm comparison evidence.
-- `bp_implementation/`: BP substrate implementation and feasibility evidence.
-- `theory_validation/`: theorem, estimator, and protocol validation evidence.
-- `calibration_design/`: evaluator and fixed-step design calibration evidence.
-- `bp_probe_ablation/`: BP four-term probing and ablation evidence.
-- `baseline_headroom/`: baseline headroom calibration evidence.
+The public tree keeps curated summaries, result tables, and figures. Raw run
+directories, transient agent workspaces, and large local logs are intentionally
+left out.
 
-The public tree keeps curated results and summaries, while raw run directories,
-large logs, and task-runner internals are intentionally left out.
+## Reading Order
+
+Read the studies in this order if you want the cleanest narrative:
+
+1. [`baseline_headroom/`](baseline_headroom/) - current benchmark calibration.
+2. [`bp_probe_ablation/`](bp_probe_ablation/) - strongest current agentic signal.
+3. [`calibration_design/`](calibration_design/) - deterministic evaluator and
+   design audit that motivated the probe redesign.
+4. [`theory_validation/`](theory_validation/) - theorem, estimator, and protocol
+   audit.
+5. [`bp_implementation/`](bp_implementation/) - first implementation pass and
+   instrumentation pilot.
+6. [`swarm_baselines/`](swarm_baselines/) - historical swarm context.
+
+## Study Map
+
+### `baseline_headroom/`
+
+**Status**: active benchmark calibration.
+
+**Question**: Is the AutoResearch task neither too easy nor too saturated before
+spending agent budget on mode comparisons?
+
+**What was run**: 161 controlled non-agentic evaluations across baseline/edit
+panels at fixed evaluator lengths, including the selected 1170-step screen.
+
+**Main result**: `width30_lr_low` was selected as the current baseline:
+`val_bpb = 0.841354`, with reviewer threshold `q* = 0.824`. It preserves
+multiple useful improvement categories while keeping negative controls.
+
+**Caveat**: This is not an agent result. It calibrates the task geometry so the
+agent studies have meaningful headroom.
+
+**Read first**:
+[`baseline_headroom/README.md`](baseline_headroom/README.md).
+
+### `bp_probe_ablation/`
+
+**Status**: active signal-detection study.
+
+**Question**: With the known confounds controlled, do the BP terms produce a
+measurable empirical pattern?
+
+**What was run**: 16 executed probes, 293 valid training runs, sequential
+execution to remove CPU contention, and a matrix varying parallelism,
+temperature diversity, shared memory, private memory, seeding, and budget.
+
+**Main result**: The clearest signal is shared memory as variance reduction.
+P12, the high-temperature shared-memory probe, beat P11 high-temperature
+exploration without memory: best `val_bpb = 0.914` vs `0.934`, mean `1.049` vs
+`1.816`, Mann-Whitney `p < 0.001`.
+
+**Caveat**: This is one replicate per probe, so it is a probing study rather
+than a confirmatory benchmark. It also exposed that the task ceiling was still
+tight: only 1.9 percent of non-baseline runs beat baseline.
+
+**Read first**:
+[`bp_probe_ablation/results/pass_04_summary.md`](bp_probe_ablation/results/pass_04_summary.md).
+
+### `calibration_design/`
+
+**Status**: superseded by `bp_probe_ablation/`, but still important.
+
+**Question**: Can the evaluator be made deterministic, and is the memory/no
+memory contrast large enough to justify a full 2x2 study?
+
+**What was run**: deterministic fixed-step evaluation, five baseline
+verification runs, and 5 replicates each of `d00` and `d10`.
+
+**Main result**: Five unmodified baseline runs produced identical
+`val_bpb = 0.811222`, proving the evaluator could remove training noise. The
+`d00` vs `d10` calibration was measurable, but the effect went the wrong way:
+memory was worse on best-of-rep (`Cohen's d = 0.66` against d10).
+
+**Caveat**: The study found design problems rather than a final result:
+run-count thresholds, memory anchoring, training-time confounds, and a task
+ceiling. Those findings directly motivated Pass 04.
+
+**Read first**:
+[`calibration_design/results/pass_03_summary.md`](calibration_design/results/pass_03_summary.md).
+
+### `theory_validation/`
+
+**Status**: theory and protocol audit, not an empirical success claim.
+
+**Question**: Does the BP decomposition theorem and its estimators survive a
+close audit against the pilot evidence?
+
+**What was run**: formal theorem review, estimator refactor, mode-label
+coverage audit, repeated incumbent evaluations, Jensen-gap checks, verifier
+noise analysis, and context-pressure feasibility analysis.
+
+**Main result**: The original claim was too broad. The current defensible
+position is a narrower single-axis theorem with explicit assumptions and a
+Jensen remainder. The protocol is cleaner, but the empirical validation remains
+insufficient.
+
+**Caveat**: The retained PDFs are source theory artifacts. Intermediate text
+extractions and stale TeX were removed because they duplicated the PDFs and made
+the reading path unclear.
+
+**Read first**:
+[`theory_validation/results/README.md`](theory_validation/results/README.md).
+
+### `bp_implementation/`
+
+**Status**: archived first pass.
+
+**Question**: Can a 2x2 agent experiment be instrumented end-to-end, and can the
+BP decomposition be measured on real LLM-driven AutoResearch runs?
+
+**What was run**: an early 2x2 pilot over single, memory, parallel, and
+parallel-shared modes; 3 reps per cell; token and wall-clock accounting;
+mode-labeling; decomposition estimates; trajectory plots.
+
+**Main result**: The infrastructure worked and produced the first evidence
+bundle, but the estimators were too brittle and the task/noise setup was not
+strong enough for a rigorous claim.
+
+**Caveat**: Treat this as historical implementation evidence. It explains why
+the later deterministic evaluator, baseline calibration, and probe ablation were
+needed.
+
+**Read first**:
+[`bp_implementation/results/pass_01_summary.md`](bp_implementation/results/pass_01_summary.md).
+
+### `swarm_baselines/`
+
+**Status**: historical context.
+
+**Question**: How did earlier blackboard-style swarm coordination behave before
+the current AgentOps Lab package was unified?
+
+**What was run**: archived analyses of two-agent swarm runs, model comparisons,
+and swarm-vs-parallelisation comparisons from the earlier swarm codebase.
+
+**Main result**: The artifacts are useful for understanding the blackboard
+coordination design: shared claims, pull-best behavior, cross-agent influence,
+and model comparison under a historical task setup.
+
+**Caveat**: These are not normalized `d00` / `d10` / `d01` / `d11` rows for the
+current BP decomposition. They are context for the swarm implementation and
+should not be mixed directly with the current calibrated studies.
+
+**Read first**:
+[`swarm_baselines/results/README.md`](swarm_baselines/results/README.md).

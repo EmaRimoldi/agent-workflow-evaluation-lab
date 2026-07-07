@@ -8,8 +8,8 @@ Whether replacing BP's fixed per-step `kappa` with an averaged `kappa_bar` is em
 
 Artifacts:
 
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/analyze_cost_variance.py`
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/cost_variance_summary.json`
+- `../experiments/followup_01/analyze_cost_variance.py`
+- `../experiments/followup_01/cost_variance_summary.json`
 
 Procedure:
 

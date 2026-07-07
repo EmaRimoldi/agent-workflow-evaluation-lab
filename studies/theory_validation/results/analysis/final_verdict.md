@@ -29,8 +29,9 @@ The narrowest honest statement is:
 
 See:
 
-- `archives/pass_02_theory_validation_bundle_20260412/theory/autoresearch_bp_revised.pdf`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/theorem_refactor_summary.md`
+- `theorem_refactor_summary.md`
+- `formal_theory_audit.md`
+- `../theory/autoresearch_bp.pdf`
 
 The base theorem is now:
 
@@ -45,8 +46,8 @@ This is the strongest defensible theorem form on the current evidence.
 
 See:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/protocol_upgrade_spec.md`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/protocol_upgrade_smoke_check.md`
+- `protocol_upgrade_spec.md`
+- `protocol_upgrade_smoke_check.md`
 
 The framework now logs:
 
@@ -62,11 +63,11 @@ This closes a real implementation gap.
 
 See:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/estimator_design.md`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/estimator_validation_note.md`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/corrected_decomposition_rep1.json`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/corrected_decomposition_rep2.json`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/corrected_decomposition_rep3.json`
+- `estimator_design.md`
+- `estimator_validation_note.md`
+- `corrected_decomposition_rep1.json`
+- `corrected_decomposition_rep2.json`
+- `corrected_decomposition_rep3.json`
 
 Important update:
 
@@ -83,8 +84,8 @@ The decomposition does **not** reduce to cost-only for implementation reasons an
 
 See:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/experiment_01_replicated_means.md`
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/replicated_means_summary.json`
+- `experiment_01_replicated_means.md`
+- `../experiments/followup_01/replicated_means_summary.json`
 
 Repeated incumbent evaluations (5 per cell total) give:
 
@@ -105,8 +106,8 @@ So the ranking signal is still weak.
 
 See:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/experiment_02_cost_variance.md`
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/cost_variance_summary.json`
+- `experiment_02_cost_variance.md`
+- `../experiments/followup_01/cost_variance_summary.json`
 
 Empirical Jensen gaps:
 
@@ -119,9 +120,9 @@ This is strong evidence that the remainder term is not cosmetic on the wall-cloc
 
 See:
 
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/experiment_03_context_sweep.md`
-- `archives/pass_02_theory_validation_bundle_20260412/analysis/context_pressure_metrics.json`
-- `archives/pass_02_theory_validation_bundle_20260412/experiments/followup_01/context_sweep_feasibility.json`
+- `experiment_03_context_sweep.md`
+- `context_pressure_metrics.json`
+- `../experiments/followup_01/context_sweep_feasibility.json`
 
 Observed max context fill remains around `0.21` to `0.24`.
 Reaching even `50%` fill would require roughly `2.1x` to `2.4x` more effective pressure.
