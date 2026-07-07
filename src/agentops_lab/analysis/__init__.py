@@ -1,4 +1,4 @@
-"""Analysis utilities for consolidated experiments."""
+"""Analysis utilities for consolidated studies."""
 
 from agentops_lab.analysis.diversity import (
     load_trajectory,

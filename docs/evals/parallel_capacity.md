@@ -102,7 +102,7 @@ Based on the autoresearch experiment setup:
    ```
 
 3. Use `recommended_n` from the benchmark output as the default `--n-agents` in
-   your parallel experiments.
+   your parallel studies.
 
 4. Re-run the benchmark when the cluster configuration changes significantly.
 

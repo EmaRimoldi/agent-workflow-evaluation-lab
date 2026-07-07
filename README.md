@@ -28,7 +28,7 @@ operational questions:
 | Mode comparison | `single_long`, `parallel`, `swarm`, and `merge` execution surfaces |
 | Swarm coordination | Shared JSONL blackboard, claims, deduplication, global-best tracking |
 | Certified time | `T_wall` and `T_cost` hitting-time analysis from run logs |
-| Baseline headroom | Calibration before confirmatory experiments so easy baselines do not dominate |
+| Baseline headroom | Calibration before confirmatory studies so easy baselines do not dominate |
 | Diversity metrics | `H_prior` / `H_post` style prompt, trajectory, and weight-space diversity |
 | Reproducible substrate | CPU-oriented AutoResearch task with deterministic fixed-step evaluation |
 | Operational traces | Snapshots, reasoning traces, training run logs, collector/reporting pipeline |
@@ -45,8 +45,13 @@ docs/
   evals/                        certified time, calibration, capacity docs
   positioning/                  public narrative for project framing
 
-experiments/
-  passes/                       curated experiment result bundles
+studies/
+  swarm_baselines/              blackboard coordination evidence
+  bp_implementation/            BP substrate implementation evidence
+  theory_validation/            theorem/protocol validation evidence
+  calibration_design/           evaluator and design calibration evidence
+  bp_probe_ablation/            BP four-term probing evidence
+  baseline_headroom/            baseline headroom calibration evidence
 
 autoresearch/
   deterministic CPU optimization substrate

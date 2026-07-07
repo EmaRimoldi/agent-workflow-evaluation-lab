@@ -28,7 +28,7 @@ operations problem:
 - A canonical runtime surface for agent execution modes.
 - A shared blackboard for swarm-style coordination.
 - Certified wall-clock and cost analysis.
-- Baseline headroom calibration before confirmatory experiments.
+- Baseline headroom calibration before confirmatory studies.
 - Diversity metrics across prompts, trajectories, and weights.
 - Reproducible CPU substrate for independent verification.
 

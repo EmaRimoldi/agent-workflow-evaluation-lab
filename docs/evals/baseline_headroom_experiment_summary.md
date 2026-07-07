@@ -2,7 +2,7 @@
 
 Generated after the baseline-headroom screens run on April 14, 2026.
 
-## Experiments Run
+## Studies Run
 
 | run | fixed steps | trials | purpose |
 | --- | ---: | ---: | --- |
@@ -15,7 +15,7 @@ Total controlled training evaluations: 161.
 
 ## Main Finding
 
-The 585-step task is too permissive for confirmatory architecture experiments.
+The 585-step task is too permissive for confirmatory architecture studies.
 It creates broad headroom, but many reasonable edits win, so it is less useful
 for testing whether agentic architecture improves search quality.
 
