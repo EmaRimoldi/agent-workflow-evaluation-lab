@@ -15,7 +15,7 @@ def run_parallel_shared_memory(
     experiment_dir: Path,
     repo_root: Path,
     system_prompt: str,
-    first_message_template: str,
+    first_message_prompt: str,
 ):
     """Run parallel agents with shared memory enabled."""
     config.mode = "parallel_shared"
@@ -26,5 +26,5 @@ def run_parallel_shared_memory(
         experiment_dir=experiment_dir,
         repo_root=repo_root,
         system_prompt=system_prompt,
-        first_message_template=first_message_template,
+        first_message_prompt=first_message_prompt,
     )

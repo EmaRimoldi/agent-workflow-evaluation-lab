@@ -66,7 +66,7 @@ replicates for configuration-level p-values.
 Single/no-memory (`d00`):
 
 ```bash
-uv run run-single-long \
+uv run agentops single-long \
   --experiment-id rg_d00_rep01 \
   --time-budget 90 \
   --train-budget 300 \
@@ -79,7 +79,7 @@ uv run run-single-long \
 Single/memory (`d10`):
 
 ```bash
-uv run run-single-memory \
+uv run agentops single-memory \
   --experiment-id rg_d10_rep01 \
   --time-budget 90 \
   --train-budget 300 \
@@ -92,7 +92,7 @@ uv run run-single-memory \
 Parallel/no-memory (`d01`):
 
 ```bash
-uv run run-parallel \
+uv run agentops parallel \
   --experiment-id rg_d01_rep01 \
   --time-budget 90 \
   --train-budget 300 \
@@ -105,7 +105,7 @@ uv run run-parallel \
 Parallel/shared-memory (`d11`):
 
 ```bash
-uv run run-parallel-shared \
+uv run agentops parallel-shared \
   --experiment-id rg_d11_rep01 \
   --time-budget 90 \
   --train-budget 300 \
@@ -119,14 +119,14 @@ Repeat each command with `rep02` through `rep05` before making confirmatory
 claims.
 
 A YAML starting point is available at
-[`docs/reviewer_grade_fixed_step_template.yaml`](reviewer_grade_fixed_step_template.yaml).
+[`reviewer_grade_fixed_step_config.yaml`](reviewer_grade_fixed_step_config.yaml).
 
 ## Certified-Time Analysis
 
 Run:
 
 ```bash
-uv run analyze-certified-time \
+uv run agentops certified-time \
   --target-val-bpb 0.90 \
   --confidence 0.80 \
   --require-reevaluation \

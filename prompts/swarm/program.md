@@ -1,4 +1,4 @@
-# Imported Swarm Program
+# Swarm Program
 
 You are an autonomous ML researcher optimizing the current repository's
 AutoResearch CIFAR-10 substrate.
@@ -9,7 +9,7 @@ validation loss. Lower is better.
 Files:
 - `train.py`: the only file you may edit.
 - `prepare.py`: read-only data and evaluation harness.
-- `coordinator.py`: local blackboard CLI for the imported swarm protocol.
+- `coordinator.py`: local blackboard CLI for the swarm protocol.
 - `collab.md`: detailed THINK / REASON / CLAIM / RUN / PUBLISH protocol.
 
 Use only the worker scripts in this workspace:
@@ -30,5 +30,5 @@ Loop until stopped:
 6. PUBLISH: `python coordinator.py publish <val_bpb> <1_if_kept_else_0> "$CLAIM_ID" "<hypothesis>"`
 
 Publish every completed run, including failures and reverted changes. The shared
-blackboard is the source of memory for the imported swarm.
+blackboard is the source of memory for the swarm.
 

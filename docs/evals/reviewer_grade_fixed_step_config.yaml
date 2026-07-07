@@ -1,4 +1,4 @@
-# Reviewer-grade template for confirmatory BP runs.
+# Reviewer-grade prompt for confirmatory BP runs.
 # Use this as a starting point, but set a concrete experiment.id per replicate:
 # rg_d00_rep01, rg_d10_rep01, rg_d01_rep01, rg_d11_rep01, etc.
 experiment:
@@ -11,7 +11,7 @@ evaluator:
   train_max_steps: 1170
   # Serialize train.py evaluations across agents to remove hardware contention.
   concurrency: serialized
-  # q* and confidence for analyze-certified-time.
+  # q* and confidence for `agentops certified-time`.
   target_val_bpb: 0.824
   success_confidence: 0.80
   # Cost proxy defaults to token units. Set evaluator_hour_price for dollar accounting.
@@ -39,6 +39,6 @@ slurm:
   gres: gpu:1
   time: "00:10:00"
 
-templates:
-  system_prompt: templates/agent_system_prompt.md
-  first_message: templates/agent_first_message.md
+prompts:
+  system_prompt: prompts/agent_system_prompt.md
+  first_message: prompts/agent_first_message.md

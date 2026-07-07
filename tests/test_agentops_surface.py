@@ -21,14 +21,14 @@ def test_swarm_mode_creates_blackboard(tmp_path):
     assert sm.path.exists()
 
 
-def test_swarm_run_delegates_to_imported_runtime(monkeypatch):
+def test_swarm_run_delegates_to_runtime(monkeypatch):
     calls = {}
 
     def fake_main(argv=None):
         calls["argv"] = argv
 
     monkeypatch.setattr(
-        "agentops_lab.imported_swarms.launcher.main_imported_swarm",
+        "agentops_lab.swarm.launcher.main_swarm",
         fake_main,
     )
 

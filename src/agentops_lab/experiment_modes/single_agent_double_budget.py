@@ -15,7 +15,7 @@ def run_single_long_experiment(
     experiment_dir: Path,
     repo_root: Path,
     system_prompt: str,
-    first_message_template: str,
+    first_message_prompt: str,
 ) -> None:
     """Run Mode 2: 1 agent × 2T budget.
 
@@ -33,7 +33,7 @@ def run_single_long_experiment(
     orchestrator.run_single(
         experiment_dir=experiment_dir,
         system_prompt=system_prompt,
-        first_message_template=first_message_template,
+        first_message_prompt=first_message_prompt,
     )
 
     agent_ids = [a.agent_id for a in config.agents]

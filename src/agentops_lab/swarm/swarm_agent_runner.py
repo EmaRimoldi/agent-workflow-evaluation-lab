@@ -22,12 +22,12 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# Ensure src/ is on sys.path when this module is imported from a fresh subprocess context.
+# Ensure src/ is on sys.path when this module is loaded from a fresh subprocess context.
 _SRC = Path(__file__).resolve().parents[2]
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from agentops_lab.imported_swarms.claude_agent_runner import (  # noqa: E402
+from agentops_lab.swarm.claude_agent_runner import (  # noqa: E402
     ClaudeAgentRunner,
     _log,
     _ts,
@@ -35,7 +35,7 @@ from agentops_lab.imported_swarms.claude_agent_runner import (  # noqa: E402
     _dump_slurm_failure_logs,
 )
 from agentops_lab.config import AgentConfig  # noqa: E402
-from agentops_lab.imported_swarms.shared_memory import SharedMemory  # noqa: E402
+from agentops_lab.swarm.shared_memory import SharedMemory  # noqa: E402
 
 
 class SwarmAgentRunner(ClaudeAgentRunner):
@@ -68,7 +68,7 @@ class SwarmAgentRunner(ClaudeAgentRunner):
 
     def _build_env(self, run_id: str, experiment_id: str) -> dict:
         env = super()._build_env(run_id, experiment_id)
-        env["AGENT_PARALLELIZATION_SRC"] = str(Path(__file__).resolve().parents[2])
+        env["AGENTOPS_LAB_SRC"] = str(Path(__file__).resolve().parents[2])
         if self.shared_memory is not None:
             env["SWARM_MEMORY_PATH"] = str(self.shared_memory.path)
         return env
@@ -249,8 +249,8 @@ def _swarm_agent_worker(
         sys.path.insert(0, str(src_dir))
 
     from agentops_lab.config import AgentConfig
-    from agentops_lab.imported_swarms.swarm_agent_runner import SwarmAgentRunner
-    from agentops_lab.imported_swarms.shared_memory import SharedMemory
+    from agentops_lab.swarm.swarm_agent_runner import SwarmAgentRunner
+    from agentops_lab.swarm.shared_memory import SharedMemory
 
     config = AgentConfig(**agent_config_dict)
     workspace = Path(workspace_str)

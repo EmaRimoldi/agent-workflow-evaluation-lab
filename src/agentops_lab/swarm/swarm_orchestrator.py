@@ -1,8 +1,8 @@
-"""Imported swarm orchestrator with a shared JSONL blackboard.
+"""Swarm orchestrator with a shared JSONL blackboard.
 
 This is a port of ``agents-swarms/src/agent_swarms/swarm_orchestrator.py`` into
 the current package namespace. It intentionally uses a distinct
-``mode_imported_swarm`` directory so it does not alter the native
+``mode_swarm`` directory so it does not alter the native
 ``parallel_shared`` implementation.
 """
 
@@ -13,20 +13,20 @@ import time
 from pathlib import Path
 
 from agentops_lab.config import AgentConfig, ExperimentConfig
-from agentops_lab.imported_swarms import IMPORTED_SWARM_MODE
-from agentops_lab.imported_swarms.shared_memory import SharedMemory
-from agentops_lab.imported_swarms.swarm_agent_runner import (
+from agentops_lab.swarm import SWARM_MODE
+from agentops_lab.swarm.shared_memory import SharedMemory
+from agentops_lab.swarm.swarm_agent_runner import (
     IsolatedSwarmAgentProcess,
 )
-from agentops_lab.imported_swarms.swarm_config import SwarmConfig
-from agentops_lab.imported_swarms.workspace import (
-    install_imported_swarm_tools,
+from agentops_lab.swarm.swarm_config import SwarmConfig
+from agentops_lab.swarm.workspace import (
+    install_swarm_tools,
 )
 from agentops_lab.orchestrator import Orchestrator
 from agentops_lab.utils.workspace import create_workspace
 
 
-class ImportedSwarmOrchestrator(Orchestrator):
+class SwarmOrchestrator(Orchestrator):
     """Coordinates a swarm run where agents communicate via a blackboard."""
 
     def __init__(
@@ -43,12 +43,12 @@ class ImportedSwarmOrchestrator(Orchestrator):
         self,
         experiment_dir: Path,
         system_prompt: str,
-        first_message_template: str,
+        first_message_prompt: str,
     ) -> None:
-        """Launch all imported-swarm agents simultaneously."""
+        """Launch all swarm agents simultaneously."""
         self._validate_gpu_assignments()
-        self.config.mode = IMPORTED_SWARM_MODE
-        mode_dir = experiment_dir / f"mode_{IMPORTED_SWARM_MODE}"
+        self.config.mode = SWARM_MODE
+        mode_dir = experiment_dir / f"mode_{SWARM_MODE}"
         mode_dir.mkdir(parents=True, exist_ok=True)
         run_id = self.config.experiment_id
 
@@ -61,7 +61,7 @@ class ImportedSwarmOrchestrator(Orchestrator):
             path=shared_memory_path,
             max_context_entries=self.swarm_config.max_context_entries,
         )
-        print(f"[imported-swarm] Shared blackboard: {shared_memory_path}", flush=True)
+        print(f"[swarm] Shared blackboard: {shared_memory_path}", flush=True)
 
         processes: list[IsolatedSwarmAgentProcess] = []
         hard_deadlines: list[float] = []
@@ -69,7 +69,7 @@ class ImportedSwarmOrchestrator(Orchestrator):
         for agent_config in self.config.agents:
             agent_dir, workspace = self._setup_swarm_agent(agent_config, mode_dir, run_id)
             first_message = _render_swarm_first_message(
-                template=first_message_template,
+                prompt=first_message_prompt,
                 agent_config=agent_config,
                 run_id=run_id,
                 experiment_id=self.config.experiment_id,
@@ -97,11 +97,11 @@ class ImportedSwarmOrchestrator(Orchestrator):
             proc.start()
 
         print(
-            f"[imported-swarm] Launched {len(processes)} agent(s) simultaneously.",
+            f"[swarm] Launched {len(processes)} agent(s) simultaneously.",
             flush=True,
         )
-        self._wait_for_imported_swarm(processes, hard_deadlines)
-        print(f"[imported-swarm] All {len(processes)} agents finished.", flush=True)
+        self._wait_for_swarm(processes, hard_deadlines)
+        print(f"[swarm] All {len(processes)} agents finished.", flush=True)
 
     def _setup_swarm_agent(
         self,
@@ -109,11 +109,11 @@ class ImportedSwarmOrchestrator(Orchestrator):
         mode_dir: Path,
         run_id: str,
     ) -> tuple[Path, Path]:
-        """Create one workspace and install imported-swarm coordination tools."""
+        """Create one workspace and install swarm coordination tools."""
         agent_dir = mode_dir / agent_config.agent_id
         workspace = agent_dir / "workspace"
         results_root = agent_dir / "results"
-        branch_name = f"imported-swarm/{self.config.experiment_id}/{agent_config.agent_id}"
+        branch_name = f"swarm/{self.config.experiment_id}/{agent_config.agent_id}"
 
         create_workspace(
             autoresearch_dir=self.autoresearch_dir,
@@ -128,11 +128,11 @@ class ImportedSwarmOrchestrator(Orchestrator):
             slurm_time=self.config.slurm_time,
             use_slurm=self.config.slurm_enabled,
             agent_time_budget_minutes=agent_config.time_budget_minutes,
-            experiment_mode=IMPORTED_SWARM_MODE,
+            experiment_mode=SWARM_MODE,
         )
         if self._swarm_memory_path is None:
             raise RuntimeError("shared memory path was not initialized")
-        install_imported_swarm_tools(
+        install_swarm_tools(
             repo_root=self.repo_root,
             workspace_path=workspace,
             swarm_memory_path=self._swarm_memory_path,
@@ -140,12 +140,12 @@ class ImportedSwarmOrchestrator(Orchestrator):
         (agent_dir / "logs").mkdir(parents=True, exist_ok=True)
         return agent_dir, workspace
 
-    def _wait_for_imported_swarm(
+    def _wait_for_swarm(
         self,
         processes: list[IsolatedSwarmAgentProcess],
         hard_deadlines: list[float],
     ) -> None:
-        """Poll until all imported-swarm processes finish or hit deadlines."""
+        """Poll until all swarm processes finish or hit deadlines."""
         while True:
             now = time.monotonic()
             all_done = True
@@ -153,7 +153,7 @@ class ImportedSwarmOrchestrator(Orchestrator):
                 if proc.is_alive():
                     if now >= deadline:
                         print(
-                            f"[imported-swarm] Hard deadline reached for "
+                            f"[swarm] Hard deadline reached for "
                             f"{proc.config.agent_id}, sending SIGTERM.",
                             flush=True,
                         )
@@ -168,21 +168,21 @@ class ImportedSwarmOrchestrator(Orchestrator):
 
 
 def _render_swarm_first_message(
-    template: str,
+    prompt: str,
     agent_config: AgentConfig,
     run_id: str,
     experiment_id: str,
     workspace: Path,
 ) -> str:
-    """Substitute template variables for the imported swarm first message."""
+    """Substitute prompt variables for the swarm first message."""
     return (
-        template
+        prompt
         .replace("{{AGENT_ID}}", agent_config.agent_id)
         .replace("{{RUN_ID}}", run_id)
         .replace("{{EXPERIMENT_ID}}", experiment_id)
         .replace("{{TIME_BUDGET}}", str(agent_config.time_budget_minutes))
         .replace("{{TRAIN_TIME_BUDGET}}", str(agent_config.train_time_budget_seconds))
         .replace("{{WORKSPACE}}", str(workspace))
-        .replace("{{BRANCH}}", f"imported-swarm/{experiment_id}/{agent_config.agent_id}")
+        .replace("{{BRANCH}}", f"swarm/{experiment_id}/{agent_config.agent_id}")
     )
 

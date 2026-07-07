@@ -1,10 +1,4 @@
-"""Canonical swarm mode surface.
-
-The distinctive swarm primitives from `agents-swarms` live under
-`agentops_lab.communication`. Full swarm execution delegates to the imported
-runtime under `agentops_lab.imported_swarms` until ownership moves
-fully into the canonical package.
-"""
+"""Canonical swarm mode surface."""
 
 from __future__ import annotations
 
@@ -33,20 +27,16 @@ def create_swarm_blackboard(
 
 
 def run_swarm(argv=None) -> None:
-    """Run the integrated imported-swarms runtime from the canonical surface.
+    """Run the swarm runtime from the canonical surface."""
+    from agentops_lab.swarm.launcher import main_swarm
 
-    The implementation remains in `agentops_lab.imported_swarms`
-    during this compatibility phase.
-    """
-    from agentops_lab.imported_swarms.launcher import main_imported_swarm
-
-    main_imported_swarm(argv)
+    main_swarm(argv)
 
 
 def main_swarm(argv=None) -> None:
-    """CLI surface for the preservation-first swarm integration."""
+    """CLI surface for swarm blackboard workflows."""
     parser = argparse.ArgumentParser(
-        prog="agentic swarm",
+        prog="agentops swarm",
         description="Inspect or initialize the canonical swarm blackboard.",
     )
     parser.add_argument(
@@ -64,7 +54,7 @@ def main_swarm(argv=None) -> None:
     parser.add_argument(
         "--run",
         action="store_true",
-        help="Run the integrated imported-swarms experiment runtime.",
+        help="Run the integrated swarm experiment runtime.",
     )
     parser.add_argument("--config", type=str, default=None)
     parser.add_argument("--time-budget", type=int, default=30)
@@ -101,7 +91,7 @@ def main_swarm(argv=None) -> None:
         return
 
     print("[swarm] Blackboard primitives are integrated.")
-    print("[swarm] Use --run to launch the integrated imported-swarms runtime.")
+    print("[swarm] Use --run to launch the integrated swarm runtime.")
 
 
 __all__ = ["SwarmModeConfig", "create_swarm_blackboard", "run_swarm", "main_swarm"]

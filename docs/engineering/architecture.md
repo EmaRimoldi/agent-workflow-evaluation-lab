@@ -1,24 +1,21 @@
 # AgentOps Lab Architecture
 
-AgentOps Lab treats `agentops_lab` as the public package surface while the
-current tested runtime remains under `agentops_lab`. The public
-architecture is split between stable interfaces, compatibility runtime,
-evaluation tooling, and experiment evidence.
+AgentOps Lab exposes one runtime package, `agentops_lab`. The architecture is
+split between experiment modes, coordination primitives, instrumentation,
+evaluation tooling, and curated experiment evidence.
 
 ## Canonical Runtime Shape
 
 ```text
-agentic CLI
+agentops CLI
   -> modes.parallel       -> agentops_lab.launcher.main_parallel
+  -> parallel-shared      -> agentops_lab.launcher.main_parallel_shared
   -> modes.single_long    -> agentops_lab.launcher.main_single_long
+  -> single-memory        -> agentops_lab.launcher.main_single_memory
   -> modes.merge          -> agentops_lab.merger.MergeOrchestrator
-  -> modes.swarm          -> integrated blackboard surface and swarm runtime
-
-agentops_lab.config
-  -> AgentConfig, ExperimentConfig from agentops_lab.config
-
-agentops_lab.orchestrator
-  -> Orchestrator from agentops_lab.orchestrator
+  -> modes.swarm          -> blackboard surface and swarm runtime
+  -> certified-time       -> agentops_lab.certified_time
+  -> baseline-calibration -> agentops_lab.baseline_calibration
 
 agentops_lab.communication
   -> SharedMemory blackboard
@@ -41,9 +38,7 @@ There is one canonical config surface:
 from agentops_lab.config import AgentConfig, ExperimentConfig
 ```
 
-During this public-release phase it re-exports the runtime dataclasses from
-`agentops_lab.config`. This keeps existing behavior stable while
-runtime ownership moves behind the canonical package surface.
+`AgentConfig` and `ExperimentConfig` live directly in `agentops_lab.config`.
 
 ## Orchestration
 
@@ -53,18 +48,19 @@ There is one canonical orchestrator surface:
 from agentops_lab.orchestrator import Orchestrator
 ```
 
-It currently delegates to `agentops_lab.orchestrator.Orchestrator`.
-The existing orchestrator owns process spawning, git worktree isolation, worker
+The orchestrator owns process spawning, git worktree isolation, worker
 integration, output collection, and report generation.
 
 ## Modes
 
 | Mode | Module | Current integration status |
 |---|---|---|
-| `parallel` | `agentops_lab.modes.parallel` | Thin wrapper around the runtime launcher |
-| `single_long` | `agentops_lab.modes.single_long` | Thin wrapper around the runtime launcher |
-| `merge` | `agentops_lab.modes.merge` | Wrapper around `MergeOrchestrator`; CLI also preserves script behavior |
-| `swarm` | `agentops_lab.modes.swarm` | Canonical blackboard creation plus `--run` delegation to the swarm runtime |
+| `parallel` | `agentops_lab.modes.parallel` | Independent agents running concurrently |
+| `parallel-shared` | `agentops_lab.launcher.main_parallel_shared` | Parallel agents with shared-memory coordination |
+| `single_long` | `agentops_lab.modes.single_long` | Single-agent long-budget baseline |
+| `single-memory` | `agentops_lab.launcher.main_single_memory` | Single-agent baseline with external memory |
+| `merge` | `agentops_lab.modes.merge` | Post-hoc merge over candidate outputs |
+| `swarm` | `agentops_lab.modes.swarm` | Shared-blackboard swarm runtime |
 
 ## Integrated Components
 
@@ -100,7 +96,6 @@ weight-space metrics import heavy ML dependencies lazily.
 
 ## Output And Reporting
 
-The canonical reporting pipeline is still the runtime output stack under
-`src/agentops_lab/outputs/` plus merge/report scripts and the swarm
-reporter path. A future cleanup should move that ownership under
-`agentops_lab.outputs` and leave compatibility imports behind.
+The reporting pipeline lives under `src/agentops_lab/outputs/` plus mode-level
+collector and reporter calls. Merge and swarm workflows write through the same
+summary schema where possible.

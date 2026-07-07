@@ -115,7 +115,7 @@ sequenceDiagram
     Note over ORC,SLURM: ── SETUP ──────────────────────────────────────────────
     User ->> ORC: python launcher.py --config experiment.yaml
     ORC ->> ORC: create N git worktrees + workspace scripts
-    ORC ->> ORC: build first_message from template for each agent
+    ORC ->> ORC: build first_message from prompt for each agent
 
     Note over ORC,SLURM: ── LAUNCH (T = 0, all simultaneous) ────────────────────
     ORC ->> PROCi: Process.start()  ×N  [no stagger, no ordering]

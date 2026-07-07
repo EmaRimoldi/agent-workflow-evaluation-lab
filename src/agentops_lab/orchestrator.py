@@ -100,7 +100,7 @@ class Orchestrator:
         self,
         experiment_dir: Path,
         system_prompt: str,
-        first_message_template: str,
+        first_message_prompt: str,
     ) -> None:
         """Launch all agents simultaneously. Block until all finish or budgets expire."""
         self._validate_gpu_assignments()
@@ -118,7 +118,7 @@ class Orchestrator:
         for agent_config in self.config.agents:
             agent_dir, workspace = self._setup_agent(agent_config, mode_dir, run_id)
             first_message = _render_first_message(
-                template=first_message_template,
+                prompt=first_message_prompt,
                 agent_config=agent_config,
                 run_id=run_id,
                 experiment_id=self.config.experiment_id,
@@ -156,7 +156,7 @@ class Orchestrator:
         self,
         experiment_dir: Path,
         system_prompt: str,
-        first_message_template: str,
+        first_message_prompt: str,
     ) -> None:
         """Launch one agent with double budget."""
         mode_dir = experiment_dir / f"mode_{self.config.mode}"
@@ -171,7 +171,7 @@ class Orchestrator:
 
         agent_dir, workspace = self._setup_agent(agent_config, mode_dir, run_id)
         first_message = _render_first_message(
-            template=first_message_template,
+            prompt=first_message_prompt,
             agent_config=agent_config,
             run_id=run_id,
             experiment_id=self.config.experiment_id,
@@ -535,15 +535,15 @@ class Orchestrator:
 
 
 def _render_first_message(
-    template: str,
+    prompt: str,
     agent_config: AgentConfig,
     run_id: str,
     experiment_id: str,
     workspace: Path,
 ) -> str:
-    """Substitute template variables in the first message."""
+    """Substitute prompt variables in the first message."""
     return (
-        template
+        prompt
         .replace("{{AGENT_ID}}", agent_config.agent_id)
         .replace("{{RUN_ID}}", run_id)
         .replace("{{EXPERIMENT_ID}}", experiment_id)

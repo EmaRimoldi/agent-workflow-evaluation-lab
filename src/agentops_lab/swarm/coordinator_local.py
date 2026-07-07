@@ -46,16 +46,16 @@ def _read_swarm_env(name: str) -> str:
 
 _CANDIDATES = [
     _THIS.parent.parent,                          # src/ when running from package
-    Path(os.environ.get("AGENT_PARALLELIZATION_SRC", "") or _read_swarm_env("AGENT_PARALLELIZATION_SRC")),  # explicit override
+    Path(os.environ.get("AGENTOPS_LAB_SRC", "") or _read_swarm_env("AGENTOPS_LAB_SRC")),  # explicit override
 ]
 for _cand in _CANDIDATES:
-    if (_cand / "agentops_lab" / "imported_swarms" / "shared_memory.py").exists():
+    if (_cand / "agentops_lab" / "swarm" / "shared_memory.py").exists():
         if str(_cand) not in sys.path:
             sys.path.insert(0, str(_cand))
         break
 
 try:
-    from agentops_lab.imported_swarms.shared_memory import (  # noqa: E402
+    from agentops_lab.swarm.shared_memory import (  # noqa: E402
         SharedMemory,
         ENTRY_RESULT,
         ENTRY_HYPOTHESIS,

@@ -1,4 +1,4 @@
-Imported swarm research task for AGENT_ID={{AGENT_ID}} in RUN_ID={{RUN_ID}} (experiment: {{EXPERIMENT_ID}}).
+Swarm research task for AGENT_ID={{AGENT_ID}} in RUN_ID={{RUN_ID}} (experiment: {{EXPERIMENT_ID}}).
 
 Your workspace is ready:
 - Branch: {{BRANCH}}
@@ -11,7 +11,7 @@ Session parameters:
 - Time budget: {{TIME_BUDGET}} minutes
 - Training time per run: ~{{TRAIN_TIME_BUDGET_MIN}} min ({{TRAIN_TIME_BUDGET}}s plus harness overhead)
 
-Read `program.md` and `collab.md` before making changes. They describe the imported blackboard protocol.
+Read `program.md` and `collab.md` before making changes. They describe the swarm blackboard protocol.
 
 Start the worker once:
 

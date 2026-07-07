@@ -38,7 +38,6 @@ operational questions:
 ```text
 src/
   agentops_lab/              public package surface and CLI
-  agentops_lab/    compatibility runtime used by current tests
 
 docs/
   research/                     BP decomposition and experiment protocols
@@ -56,7 +55,7 @@ configs/
   runnable experiment configs
 
 scripts/
-  compatibility scripts and analysis utilities
+  analysis utilities and workflow helpers
 
 tests/
   unit, integration, and public-surface smoke tests
@@ -79,22 +78,15 @@ PYTHONPATH=src python -m pytest tests -q
 Canonical public surface:
 
 ```bash
-uv run agentic --help
-uv run agentic parallel --help
-uv run agentic single-long --help
-uv run agentic swarm --help
-uv run agentic merge --help
-```
-
-Compatibility entrypoints remain available while runtime ownership moves fully
-under `agentops_lab`:
-
-```bash
-uv run run-parallel --help
-uv run run-single-long --help
-uv run run-imported-swarm --help
-uv run analyze-certified-time --help
-uv run calibrate-baseline-headroom --help
+uv run agentops --help
+uv run agentops parallel --help
+uv run agentops parallel-shared --help
+uv run agentops single-long --help
+uv run agentops single-memory --help
+uv run agentops swarm --help
+uv run agentops merge --help
+uv run agentops certified-time --help
+uv run agentops baseline-calibration --help
 ```
 
 ## Public Package Surface
@@ -122,10 +114,8 @@ agentops_lab/
     merge.py
 ```
 
-The compatibility implementation remains under `agentops_lab`
-during this public-release phase because it is the currently tested runtime for
-launching, collection, reporting, merge, baseline calibration, and certified
-time workflows.
+The runtime, evaluation tools, reporting pipeline, and public imports live under
+one package: `agentops_lab`.
 
 ## Research Frame
 

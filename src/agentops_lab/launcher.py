@@ -19,14 +19,14 @@ def _repo_root() -> Path:
     return Path(__file__).parents[2]  # src/ → repo root
 
 
-def _load_template(path: Path) -> str:
+def _load_prompt(path: Path) -> str:
     if not path.exists():
-        raise FileNotFoundError(f"Template not found: {path}")
+        raise FileNotFoundError(f"Prompt not found: {path}")
     return path.read_text()
 
 
-def _render_template(
-    template: str,
+def _render_prompt(
+    prompt: str,
     train_budget_seconds: int,
     slurm_enabled: bool,
     train_max_steps: int | None = None,
@@ -47,7 +47,7 @@ def _render_template(
         )
     target_text = "not preset" if target_val_bpb is None else f"{target_val_bpb:.6f}"
     return (
-        template.replace("{{TRAIN_TIME_BUDGET_MIN}}", str(train_min))
+        prompt.replace("{{TRAIN_TIME_BUDGET_MIN}}", str(train_min))
         .replace("{{COMPUTE_DEVICE}}", compute_device)
         .replace("{{RESOURCE_METRIC}}", resource_metric)
         .replace("{{EVALUATOR_BUDGET_DESCRIPTION}}", evaluator_budget_description)
@@ -67,7 +67,7 @@ def _coerce_config_for_mode(
     n_agents: int | None = None,
 ) -> ExperimentConfig:
     """Normalize a loaded YAML config to the command's target mode."""
-    template = config.agents[0] if config.agents else AgentConfig(agent_id="agent_0")
+    prompt = config.agents[0] if config.agents else AgentConfig(agent_id="agent_0")
 
     if mode in {"single_long", "single_memory"}:
         config.mode = mode
@@ -77,9 +77,9 @@ def _coerce_config_for_mode(
                 time_budget_minutes=config.base_time_budget_minutes,
                 train_time_budget_seconds=config.train_time_budget_seconds,
                 train_max_steps=config.train_max_steps,
-                cuda_device=template.cuda_device,
-                model=template.model,
-                temperature=template.temperature,
+                cuda_device=prompt.cuda_device,
+                model=prompt.model,
+                temperature=prompt.temperature,
                 use_external_memory=(mode == "single_memory"),
                 use_shared_memory=False,
             )
@@ -87,7 +87,7 @@ def _coerce_config_for_mode(
         return config
 
     desired_n = n_agents or max(len(config.agents), 2)
-    existing_devices = [agent.cuda_device for agent in config.agents] or [template.cuda_device]
+    existing_devices = [agent.cuda_device for agent in config.agents] or [prompt.cuda_device]
     config.mode = mode
     config.agents = [
         AgentConfig(
@@ -96,8 +96,8 @@ def _coerce_config_for_mode(
             train_time_budget_seconds=config.train_time_budget_seconds,
             train_max_steps=config.train_max_steps,
             cuda_device=existing_devices[index] if index < len(existing_devices) else str(index),
-            model=template.model,
-            temperature=template.temperature,
+            model=prompt.model,
+            temperature=prompt.temperature,
             use_external_memory=False,
             use_shared_memory=(mode == "parallel_shared"),
         )
@@ -146,16 +146,16 @@ def _apply_reviewer_grade_args(config: ExperimentConfig, args) -> None:
 
 
 def _render_prompts(repo_root: Path, config: ExperimentConfig) -> tuple[str, str]:
-    system_prompt = _render_template(
-        _load_template(repo_root / config.system_prompt_file),
+    system_prompt = _render_prompt(
+        _load_prompt(repo_root / config.system_prompt_file),
         config.train_time_budget_seconds,
         config.slurm_enabled,
         train_max_steps=config.train_max_steps,
         evaluator_concurrency=config.evaluator_concurrency,
         target_val_bpb=config.target_val_bpb,
     )
-    first_message_tmpl = _render_template(
-        _load_template(repo_root / config.first_message_file),
+    first_message_tmpl = _render_prompt(
+        _load_prompt(repo_root / config.first_message_file),
         config.train_time_budget_seconds,
         config.slurm_enabled,
         train_max_steps=config.train_max_steps,
@@ -217,7 +217,7 @@ def main_parallel(argv=None) -> None:
         experiment_dir=experiment_dir,
         repo_root=repo_root,
         system_prompt=system_prompt,
-        first_message_template=first_message_tmpl,
+        first_message_prompt=first_message_tmpl,
     )
     print(f"[launcher] Parallel experiment complete. Results: {experiment_dir}")
 
@@ -277,7 +277,7 @@ def main_parallel_shared(argv=None) -> None:
         experiment_dir=experiment_dir,
         repo_root=repo_root,
         system_prompt=system_prompt,
-        first_message_template=first_message_tmpl,
+        first_message_prompt=first_message_tmpl,
     )
     print(f"[launcher] Parallel-shared experiment complete. Results: {experiment_dir}")
 
@@ -330,7 +330,7 @@ def main_single_long(argv=None) -> None:
         experiment_dir=experiment_dir,
         repo_root=repo_root,
         system_prompt=system_prompt,
-        first_message_template=first_message_tmpl,
+        first_message_prompt=first_message_tmpl,
     )
     print(f"[launcher] Single-long experiment complete. Results: {experiment_dir}")
 
@@ -383,7 +383,7 @@ def main_single_memory(argv=None) -> None:
         experiment_dir=experiment_dir,
         repo_root=repo_root,
         system_prompt=system_prompt,
-        first_message_template=first_message_tmpl,
+        first_message_prompt=first_message_tmpl,
     )
     print(f"[launcher] Single-memory experiment complete. Results: {experiment_dir}")
 

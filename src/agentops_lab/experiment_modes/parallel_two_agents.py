@@ -15,7 +15,7 @@ def run_parallel_experiment(
     experiment_dir: Path,
     repo_root: Path,
     system_prompt: str,
-    first_message_template: str,
+    first_message_prompt: str,
 ) -> None:
     """Run Mode 1: N agents x T budget.
 
@@ -36,7 +36,7 @@ def run_parallel_experiment(
     orchestrator.run_parallel(
         experiment_dir=experiment_dir,
         system_prompt=system_prompt,
-        first_message_template=first_message_template,
+        first_message_prompt=first_message_prompt,
     )
 
     # Collect after all agents finish

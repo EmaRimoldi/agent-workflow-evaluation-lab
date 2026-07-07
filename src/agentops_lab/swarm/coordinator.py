@@ -65,15 +65,15 @@ def _read_swarm_env(name: str) -> str:
 # Ensure the package is importable when called from a copied workspace file.
 _CANDIDATES = [
     Path(__file__).resolve().parents[2] if len(Path(__file__).resolve().parents) > 2 else Path(""),
-    Path(os.environ.get("AGENT_PARALLELIZATION_SRC", "") or _read_swarm_env("AGENT_PARALLELIZATION_SRC")),
+    Path(os.environ.get("AGENTOPS_LAB_SRC", "") or _read_swarm_env("AGENTOPS_LAB_SRC")),
 ]
 for _cand in _CANDIDATES:
-    if (_cand / "agentops_lab" / "imported_swarms" / "shared_memory.py").exists():
+    if (_cand / "agentops_lab" / "swarm" / "shared_memory.py").exists():
         if str(_cand) not in sys.path:
             sys.path.insert(0, str(_cand))
         break
 
-from agentops_lab.imported_swarms.shared_memory import (  # noqa: E402
+from agentops_lab.swarm.shared_memory import (  # noqa: E402
     SharedMemory,
     ENTRY_HYPOTHESIS,
     ENTRY_RESULT,

@@ -5,14 +5,14 @@ import multiprocessing
 import time
 from pathlib import Path
 
-from agentops_lab.imported_swarms.shared_memory import (
+from agentops_lab.swarm.shared_memory import (
     ENTRY_RESULT,
     ENTRY_STATUS,
     SharedMemory,
 )
 
 
-def test_imported_swarm_memory_filters_own_entries(tmp_path: Path) -> None:
+def test_swarm_memory_filters_own_entries(tmp_path: Path) -> None:
     memory = SharedMemory(tmp_path / "shared_memory.jsonl", max_context_entries=20)
     memory.write("agent_0", ENTRY_RESULT, {"step": 1, "val_bpb": 1.1})
     memory.write("agent_1", ENTRY_RESULT, {"step": 1, "val_bpb": 1.09})
@@ -24,7 +24,7 @@ def test_imported_swarm_memory_filters_own_entries(tmp_path: Path) -> None:
     assert other_entries[0]["agent_id"] == "agent_1"
 
 
-def test_imported_swarm_memory_updates_best_sidecar(tmp_path: Path) -> None:
+def test_swarm_memory_updates_best_sidecar(tmp_path: Path) -> None:
     memory = SharedMemory(tmp_path / "shared_memory.jsonl")
 
     assert memory.update_best("agent_0", 1.2, "BEST = 1\n")
@@ -44,7 +44,7 @@ def _write_many(path: str, agent_id: str, n_writes: int) -> None:
         time.sleep(0.001)
 
 
-def test_imported_swarm_memory_concurrent_writes_are_valid_jsonl(tmp_path: Path) -> None:
+def test_swarm_memory_concurrent_writes_are_valid_jsonl(tmp_path: Path) -> None:
     path = tmp_path / "shared_memory.jsonl"
     processes = [
         multiprocessing.Process(target=_write_many, args=(str(path), f"agent_{i}", 10))

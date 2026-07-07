@@ -15,7 +15,7 @@ The calibration is intentionally non-agentic:
 Cheap smoke test:
 
 ```bash
-uv run calibrate-baseline-headroom \
+uv run agentops baseline-calibration \
   --train-max-steps 2 \
   --baseline-ids lr_low_no_schedule \
   --edit-ids lr_1p5e3,batch64 \
@@ -35,7 +35,7 @@ PYTHONPATH=src python -m agentops_lab.baseline_calibration \
 Full calibration starting point:
 
 ```bash
-uv run calibrate-baseline-headroom \
+uv run agentops baseline-calibration \
   --train-max-steps 1170 \
   --train-time-budget 300 \
   --timeout 900 \

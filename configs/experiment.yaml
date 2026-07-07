@@ -67,8 +67,8 @@ slurm:
   # Must be long enough for train_time_budget_seconds + ~2 min overhead.
   time: "00:10:00"
 
-# ── Template files ────────────────────────────────────────────────
+# ── Prompt files ────────────────────────────────────────────────
 # Paths are relative to the repo root.
-templates:
-  system_prompt: templates/agent_system_prompt.md
-  first_message: templates/agent_first_message.md
+prompts:
+  system_prompt: prompts/agent_system_prompt.md
+  first_message: prompts/agent_first_message.md

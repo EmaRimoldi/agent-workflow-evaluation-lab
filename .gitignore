@@ -16,7 +16,7 @@ experiments/passes/*/logs/
 # Results (generated analysis, figures — regenerable from runs)
 experiments/passes/*/results/
 
-# Exceptions: track imported swarms results (small, curated)
+# Exceptions: track swarms results (small, curated)
 !experiments/passes/pass_00__swarms__archived/results/
 !experiments/passes/pass_00__swarms__archived/results/**
 

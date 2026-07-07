@@ -21,8 +21,8 @@ class AgentConfig:
     temperature: Optional[float] = None
     use_external_memory: bool = False
     use_shared_memory: bool = False
-    system_prompt_file: str = "templates/agent_system_prompt.md"
-    first_message_file: str = "templates/agent_first_message.md"
+    system_prompt_file: str = "prompts/agent_system_prompt.md"
+    first_message_file: str = "prompts/agent_first_message.md"
 
     @classmethod
     def from_json(cls, path: Path) -> "AgentConfig":
@@ -64,9 +64,9 @@ class ExperimentConfig:
     slurm_partition: str = "pi_tpoggio"
     slurm_gres: str = "gpu:1"
     slurm_time: str = "00:10:00"
-    # Template file paths (relative to repo root)
-    system_prompt_file: str = "templates/agent_system_prompt.md"
-    first_message_file: str = "templates/agent_first_message.md"
+    # Prompt file paths (relative to repo root)
+    system_prompt_file: str = "prompts/agent_system_prompt.md"
+    first_message_file: str = "prompts/agent_first_message.md"
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -212,7 +212,7 @@ class ExperimentConfig:
         ag    = raw.get("agents", {})
         eval_ = raw.get("evaluator", {})
         slurm = raw.get("slurm", {})
-        tmpl  = raw.get("templates", {})
+        tmpl  = raw.get("prompts", {})
 
         mode     = exp.get("mode", "parallel")
         budget   = int(ag.get("time_budget_minutes", 30))
@@ -305,8 +305,8 @@ class ExperimentConfig:
             slurm_partition=slurm.get("partition", "pi_tpoggio"),
             slurm_gres=slurm.get("gres", "gpu:1"),
             slurm_time=slurm.get("time", "00:10:00"),
-            system_prompt_file=tmpl.get("system_prompt", "templates/agent_system_prompt.md"),
-            first_message_file=tmpl.get("first_message", "templates/agent_first_message.md"),
+            system_prompt_file=tmpl.get("system_prompt", "prompts/agent_system_prompt.md"),
+            first_message_file=tmpl.get("first_message", "prompts/agent_first_message.md"),
         )
 
 
