@@ -102,7 +102,7 @@ Strategy category success rates:
 - 293/293 runs have valid git commits and strategy categories
 - Protocol modes are consistent: 84% explore, 9.2% bootstrap, 6.8% reevaluation
 
-The model is capable of the task. The bottleneck is **task headroom**: 60s training on this architecture leaves very little room for improvement. The optimal changes (LR adjustments of 50-100%) are a needle in a haystack of harmful changes.
+The model is capable of the task. The bottleneck is **limited room for measurable improvement**: 60s training on this architecture leaves very little room for improvement. The optimal changes (LR adjustments of 50-100%) are a needle in a haystack of harmful changes.
 
 ### Finding 7: Tool usage is consistent
 

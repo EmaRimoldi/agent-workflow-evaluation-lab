@@ -1,8 +1,8 @@
-# Implementation Pilot Study
+# Agent Workflow Feasibility Pilot
 
 **Status**: Archived
 **Period**: April 2026 (first study)
-**Objective**: Build the experimental infrastructure and run a first pilot to test whether the Beneventano-Poggio (BP) four-term decomposition framework applies to LLM-driven autonomous agents.
+**Objective**: Build the first end-to-end agent workflow experiment and test whether the Beneventano-Poggio (BP) four-term decomposition can be measured on LLM-driven autonomous agents.
 
 ---
 
@@ -16,7 +16,7 @@ Can we empirically measure how parallelism and memory affect the performance of 
 Delta = log(kappa_0 / kappa) + phi + G - epsilon
 ```
 
-Each term has a specific empirical estimator used in the implementation pilot:
+Each term has a specific empirical estimator used in this pilot:
 
 - **log(kappa_0 / kappa)** — cost efficiency. kappa is the mean cost per LLM turn, measured in two units:
   - *Token axis*: kappa_token = mean tokens per turn (input + output). Tokens are read from the Claude API `usage` response; if unavailable, estimated as total_characters / 4, calibrated against turns that do have API counts (median ratio correction).
@@ -31,7 +31,7 @@ Each term has a specific empirical estimator used in the implementation pilot:
 
 **Why phi, G, epsilon were near-zero in the pilot**: The mode labeling system classifies each agent edit into categories, but in the pilot most edits fell into the same category ("optimizer"), yielding near-uniform distributions. With so little category diversity, the KL divergences collapse to zero and the attempts-to-first-success ratios are uninformative. This is a measurement resolution problem, not a theoretical one.
 
-This decomposition was developed for theoretical analysis. The question is whether it produces measurable, non-trivial terms when applied to real LLM agents running real ML tasks.
+This decomposition was developed for theoretical analysis. The question is whether it produces measurable terms when applied to real LLM agents running real ML tasks.
 
 **Experimental approach**: We use a 2x2 factorial design crossing parallelism (1 vs 2 agents) with memory (none vs external/shared), where the agents autonomously train CNNs on CIFAR-10. The baseline cell d00 (single agent, no memory) anchors the decomposition: each other cell's performance is decomposed into the four terms relative to d00.
 
@@ -47,7 +47,7 @@ This decomposition was developed for theoretical analysis. The question is wheth
 
 ## Experimental Design
 
-The implementation pilot tested the 2x2 factorial design:
+The pilot tested the 2x2 factorial design:
 
 |              | No Memory (0) | Memory (1)     |
 |--------------|---------------|----------------|
@@ -134,7 +134,7 @@ A later follow-up benchmark was added to answer the complementary question that 
 
 This matters because the 2x2 agent design can be run with either fixed-time or fixed-step evaluators. Under a fixed-time evaluator, parallel jobs can produce worse results simply because each job completes fewer gradient steps in the same wall-clock budget. Under a fixed-step evaluator, the gradient-update count is equalized, so any remaining contention appears as wall-clock overhead instead of a direct quality penalty.
 
-The follow-up used the deterministic calibration-design training workspace, CPU-only execution, and `MAX_STEPS = 300` for every worker. Results are stored in `resource_contention__fixed-step-followup__20260413/`.
+The follow-up used the deterministic calibration-design training workspace, CPU-only execution, and `MAX_STEPS = 300` for every worker. Results are stored in `fixed_step_cpu_contention_followup/`.
 
 | Condition | Group wall time | Mean worker time | Steps | Mean val_bpb |
 |-----------|-----------------|------------------|-------|--------------|
@@ -212,7 +212,7 @@ All exploratory runs use claude-haiku-4-5, 10-minute budget, 120s per training a
 3 of 5 single-long runs produced no usable metrics (agent failed to complete a training run within budget).
 
 **Observations**:
-- The best result across the implementation pilot was a single-agent + memory run (0.739), substantially beating the pilot mean.
+- The best result across the feasibility pilot was a single-agent + memory run (0.739), substantially beating the pilot mean.
 - Parallel configurations consistently underperformed single-agent setups, reinforcing the resource contention finding.
 - 3/8 exploratory runs produced no data, highlighting infrastructure fragility at shorter budgets.
 
@@ -298,4 +298,4 @@ The decomposition terms phi, G, and epsilon depend on classifying each agent edi
 
 - The theory validation study addressed the theoretical decomposition framework.
 - The calibration design study introduced phased execution and config routing.
-- The probe ablation study redesigned the 2x2 with confound controls (fixed seeds, CPU pinning, task headroom) informed directly by the implementation pilot findings.
+- The probe ablation study redesigned the 2x2 with confound controls: fixed seeds, CPU-aware execution, and a calibrated starting model.

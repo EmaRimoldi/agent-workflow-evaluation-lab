@@ -35,8 +35,8 @@ Read the studies in this order if you want the cleanest narrative:
    design audit that motivated the probe redesign.
 4. [`theory_validation/`](theory_validation/) - theorem, estimator, and protocol
    audit.
-5. [`bp_implementation/`](bp_implementation/) - first implementation study and
-   instrumentation pilot.
+5. [`agent_workflow_feasibility_pilot/`](agent_workflow_feasibility_pilot/) -
+   first 2x2 agent pilot and CPU-contention evidence.
 6. [`swarm_baselines/`](swarm_baselines/) - historical swarm context.
 
 ## Study Map
@@ -131,11 +131,11 @@ the reading path unclear.
 **Read first**:
 [`theory_validation/results/README.md`](theory_validation/results/README.md).
 
-### `bp_implementation/`
+### `agent_workflow_feasibility_pilot/`
 
-**Status**: archived first study.
+**Status**: archived first agent-workflow study.
 
-**Question**: Can a 2x2 agent experiment be instrumented end-to-end, and can the
+**Question**: Can a 2x2 agent workflow experiment be run end-to-end, and can the
 BP decomposition be measured on real LLM-driven AutoResearch runs?
 
 **What was run**: an early 2x2 pilot over single, memory, parallel, and
@@ -143,15 +143,15 @@ parallel-shared modes; 3 reps per cell; token and wall-clock accounting;
 mode-labeling; decomposition estimates; trajectory plots.
 
 **Main result**: The infrastructure worked and produced the first evidence
-bundle, but the estimators were too brittle and the task/noise setup was not
-strong enough for a rigorous claim.
+bundle, but the pilot exposed CPU contention, unstable first edits, and sparse
+accepted-edit data. It is useful as design evidence, not as a final result.
 
-**Caveat**: Treat this as historical implementation evidence. It explains why
-the later deterministic evaluator, baseline calibration, and probe ablation were
-needed.
+**Caveat**: Treat this as historical feasibility evidence. It explains why the
+later deterministic evaluator, starting-model calibration, and probe ablation
+were needed.
 
 **Read first**:
-[`bp_implementation/results/implementation_pilot_summary.md`](bp_implementation/results/implementation_pilot_summary.md).
+[`agent_workflow_feasibility_pilot/README.md`](agent_workflow_feasibility_pilot/README.md).
 
 ### `swarm_baselines/`
 

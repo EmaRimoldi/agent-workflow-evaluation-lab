@@ -56,4 +56,4 @@ The "Run-9 Wall" — zero improvements before run index 9 in single-agent cells 
 
 ## What Changed in Experimental Understanding
 
-Before this audit, the working hypothesis was "both memory and parallelism hurt performance." After the audit, the revised understanding is: **the experiment does not provide a valid test of the BP framework** because five systematic confounds compromise the comparison. The results are informative about what conditions the BP framework requires (diversity, structured memory, sufficient budget, adequate task headroom), but they do not constitute evidence for or against the framework itself.
+Before this audit, the working hypothesis was "both memory and parallelism hurt performance." After the audit, the revised understanding is: **the experiment does not provide a valid test of the BP framework** because five systematic confounds compromise the comparison. The results are informative about what conditions the BP framework requires (diversity, structured memory, sufficient budget, adequate room for measurable improvement), but they do not constitute evidence for or against the framework itself.

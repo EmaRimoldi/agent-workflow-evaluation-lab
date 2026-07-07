@@ -50,10 +50,10 @@ This gives the repo a concrete experimental question:
    attributed to agent edits rather than training noise.
 
 4. Read the earliest pilot only as historical context:
-   [`studies/bp_implementation/results/implementation_pilot_summary.md`](../studies/bp_implementation/results/implementation_pilot_summary.md).
+   [`studies/agent_workflow_feasibility_pilot/README.md`](../studies/agent_workflow_feasibility_pilot/README.md).
 
-   This study built the instrumentation, but it also exposed estimator and task
-   design weaknesses that later studies fixed.
+   This study built the first 2x2 agent workflow, but it also exposed estimator,
+   CPU-contention, and task-design weaknesses that later studies fixed.
 
 ## What To Look At Visually
 
