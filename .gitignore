@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Runs and experiment outputs (raw data, too large for git)
+runs/
+experiments/passes/*/runs/
+experiments/passes/*/logs/
+
+# Results (generated analysis, figures — regenerable from runs)
+experiments/passes/*/results/
+
+# Exceptions: track imported swarms results (small, curated)
+!experiments/passes/pass_00__swarms__archived/results/
+!experiments/passes/pass_00__swarms__archived/results/**
+
+# Exceptions: track pass summaries and figures (small, curated)
+!experiments/passes/pass_01__bp-implementation__archived/results/
+!experiments/passes/pass_01__bp-implementation__archived/results/**
+!experiments/passes/pass_02__theory-validation__superseded/results/
+!experiments/passes/pass_02__theory-validation__superseded/results/**
+!experiments/passes/pass_03__calibration-design__superseded/results/
+!experiments/passes/pass_03__calibration-design__superseded/results/**
+!experiments/passes/pass_04__bp-4term-probing__active/results/
+!experiments/passes/pass_04__bp-4term-probing__active/results/**
+!experiments/passes/pass_05__baseline-headroom-calibration__active/results/
+!experiments/passes/pass_05__baseline-headroom-calibration__active/results/**
+
+# External repos
+/agents-swarms/
+autoresearch/data/
+
+# Legacy paths (compatibility symlinks)
+workflow/logs/
+workflow/artifacts/
+workflow/scripts
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Test caches
+.pytest_cache/
+
+# OS
+.DS_Store
+*.swp
+
+# Claude Code project settings
+.claude/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out

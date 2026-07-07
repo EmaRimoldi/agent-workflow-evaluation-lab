@@ -1,0 +1,10 @@
+# Research
+
+This section captures the research frame behind AgentOps Lab: how to compare
+agentic execution modes under quality, cost, and wall-clock constraints.
+
+| File | Role |
+|---|---|
+| [`experiment_protocol.md`](experiment_protocol.md) | Experimental protocol for mode comparison |
+| [`merge_protocol.md`](merge_protocol.md) | Post-hoc merge workflow and selection logic |
+
