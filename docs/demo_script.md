@@ -22,8 +22,8 @@ The repo does three things:
    certified hitting time.
 3. Preserves the studies showing what was learned.
 
-The strongest current result is the probe ablation study. High-temperature
-exploration without memory, `P11`, was unstable: best `val_bpb = 0.934`, mean
+The strongest current result is the probe ablation study. Exploratory search
+without memory, `P11`, was unstable: best `val_bpb = 0.934`, mean
 `1.816`. The shared-memory version, `P12`, was better and much more stable:
 best `0.914`, mean `1.049`, with Mann-Whitney `p < 0.001`.
 
@@ -87,8 +87,8 @@ Key numbers:
 
 | Probe | Meaning | Runs | Best `val_bpb` | Mean `val_bpb` |
 |---|---|---:|---:|---:|
-| `P11` | high-temperature exploration, no memory | 21 | 0.934 | 1.816 |
-| `P12` | high-temperature exploration with shared memory | 41 | 0.914 | 1.049 |
+| `P11` | exploratory search, no memory | 21 | 0.934 | 1.816 |
+| `P12` | exploratory search with shared memory | 41 | 0.914 | 1.049 |
 
 What to say:
 

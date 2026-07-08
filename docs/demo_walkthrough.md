@@ -36,8 +36,8 @@ This gives the repo a concrete experimental question:
 
    | Probe | Meaning | Runs | Best `val_bpb` | Mean `val_bpb` |
    |---|---|---:|---:|---:|
-   | P11 | high-temperature exploration, no memory | 21 | 0.934 | 1.816 |
-   | P12 | high-temperature exploration with shared memory | 41 | 0.914 | 1.049 |
+   | P11 | exploratory search, no memory | 21 | 0.934 | 1.816 |
+   | P12 | exploratory search with shared memory | 41 | 0.914 | 1.049 |
 
    The interpretation is that exploration without routing correction behaves
    like a random walk, while shared memory reduces catastrophic repeats.

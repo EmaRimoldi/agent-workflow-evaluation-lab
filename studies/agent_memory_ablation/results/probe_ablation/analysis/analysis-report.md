@@ -2,9 +2,13 @@
 
 **Date**: 2026-04-13
 **Analyst**: Claude (automated)
-**Dataset**: 16 probes, 293 valid training runs, 25 baseline runs, 268 non-baseline runs
+**Dataset**: historical 16-probe archive, 293 training records, 25 baseline runs, 268 non-baseline runs
 **Primary metric**: val_bpb (lower is better)
 **Baseline**: 0.925845
+
+> **Archive note**: the canonical public analysis excludes `P05`-`P08`
+> because memory was configured but silently broken. Use
+> `../../validity_filter.md` for the current valid-analysis set.
 
 ---
 

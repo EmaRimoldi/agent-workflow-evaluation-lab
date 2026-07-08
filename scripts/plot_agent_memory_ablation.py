@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,31 +18,60 @@ BASELINE_BPB = 0.925845
 
 BLUE = "#2563eb"
 GREEN = "#16a34a"
-ORANGE = "#f97316"
 RED = "#dc2626"
 PURPLE = "#7c3aed"
 GRAY = "#64748b"
 LIGHT_GRAY = "#e2e8f0"
 DARK = "#111827"
 
+VALID_PROBES = [
+    "P02",
+    "P03",
+    "P04",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P15",
+    "P16",
+    "P17",
+]
+
+BROKEN_MEMORY_PROBES = {
+    "P05": "private-memory context was empty",
+    "P06": "shared-memory log was empty",
+    "P07": "shared-memory log was empty",
+    "P08": "private-memory context was empty",
+}
+
+CONTEXT_ONLY_PROBES = {
+    "P01": "legacy training template used about 315 seconds per run",
+}
+
+NOT_RUN_PROBES = {
+    "P14": "planned private-memory probe, not executed",
+    "P18": "planned seeded parallel probe, not executed",
+}
+
 PROBE_META = {
-    "P01": ("parallel, same settings", "no_memory", "15m"),
-    "P02": ("parallel, different temps", "no_memory", "15m"),
-    "P03": ("single agent", "no_memory", "15m"),
-    "P04": ("single, 30s evaluator", "no_memory", "15m"),
-    "P05": ("private memory configured", "broken_memory", "15m"),
-    "P06": ("shared memory configured", "broken_memory", "15m"),
-    "P07": ("shared memory configured", "broken_memory", "30m"),
-    "P08": ("private memory configured", "broken_memory", "30m"),
-    "P09": ("parallel, different temps", "no_memory", "30m"),
-    "P10": ("parallel, same settings", "no_memory", "15m"),
-    "P11": ("high exploration, no memory", "no_memory", "45m"),
-    "P12": ("high exploration + shared memory", "valid_memory", "45m"),
-    "P13": ("two high-exploration agents", "no_memory", "45m"),
-    "P14": ("private memory + high exploration", "missing", "not run"),
-    "P15": ("seeded learning-rate hint", "seeded", "45m"),
-    "P16": ("start from LR hint baseline", "seeded", "45m"),
-    "P17": ("shared + private memory", "valid_memory", "45m"),
+    "P01": ("parallel, same settings", "context", "15 min"),
+    "P02": ("parallel, mixed search styles", "no_memory", "15 min"),
+    "P03": ("single-agent control", "no_memory", "15 min"),
+    "P04": ("single agent, 30-second train", "no_memory", "15 min"),
+    "P05": ("excluded: private memory broken", "excluded", "15 min"),
+    "P06": ("excluded: shared memory broken", "excluded", "15 min"),
+    "P07": ("excluded: shared memory broken", "excluded", "30 min"),
+    "P08": ("excluded: private memory broken", "excluded", "30 min"),
+    "P09": ("parallel, mixed search styles", "no_memory", "30 min"),
+    "P10": ("parallel, same search style", "no_memory", "15 min"),
+    "P11": ("exploratory, no memory", "no_memory", "45 min"),
+    "P12": ("exploratory + shared memory", "valid_memory", "45 min"),
+    "P13": ("two exploratory agents", "no_memory", "45 min"),
+    "P14": ("private memory + exploratory", "missing", "not run"),
+    "P15": ("seeded learning-rate hint", "seeded", "45 min"),
+    "P16": ("start from seeded baseline", "seeded", "45 min"),
+    "P17": ("shared + private memory", "valid_memory", "45 min"),
     "P18": ("seeded parallel agents", "missing", "not run"),
 }
 
@@ -67,8 +97,9 @@ MEAN_BPB = {
 COLORS = {
     "no_memory": BLUE,
     "valid_memory": GREEN,
-    "broken_memory": ORANGE,
     "seeded": PURPLE,
+    "context": GRAY,
+    "excluded": GRAY,
     "missing": GRAY,
 }
 
@@ -117,10 +148,10 @@ def label_for(probe: str) -> str:
 
 
 def figure_probe_outcomes(results: dict) -> None:
-    probes = [f"P{i:02d}" for i in range(1, 19)]
+    probes = VALID_PROBES
     y = list(range(len(probes)))
 
-    fig, ax = plt.subplots(figsize=(11.2, 9.4), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(11.4, 7.0), constrained_layout=True)
     ax.axvline(
         BASELINE_BPB,
         color=RED,
@@ -130,13 +161,9 @@ def figure_probe_outcomes(results: dict) -> None:
     )
 
     for idx, probe in enumerate(probes):
-        name, kind, _ = PROBE_META[probe]
+        _, kind, _ = PROBE_META[probe]
         value = results.get(probe, {}).get("best_bpb")
         color = COLORS[kind]
-        if value is None:
-            ax.scatter(1.02, idx, marker="x", s=80, color=color, linewidth=2)
-            ax.text(1.028, idx, "not run", va="center", fontsize=9.5, color=GRAY)
-            continue
         ax.hlines(idx, xmin=min(value, BASELINE_BPB), xmax=max(value, BASELINE_BPB), color=LIGHT_GRAY, linewidth=2)
         marker = "*" if value < BASELINE_BPB else "o"
         size = 150 if marker == "*" else 90
@@ -148,18 +175,25 @@ def figure_probe_outcomes(results: dict) -> None:
     ax.invert_yaxis()
     ax.set_xlim(0.86, 1.14)
     ax.set_xlabel("Best validation BPB reached (lower is better)")
-    ax.set_title("Agent memory ablation: which probes beat the baseline?")
+    ax.set_title("Valid probe outcomes after excluding corrupted memory trials")
     ax.grid(axis="y", visible=False)
 
     handles = [
         plt.Line2D([0], [0], color=RED, linestyle="--", linewidth=1.8, label="baseline"),
         plt.Line2D([0], [0], marker="o", color="w", markerfacecolor=BLUE, markersize=9, label="no memory"),
         plt.Line2D([0], [0], marker="o", color="w", markerfacecolor=GREEN, markersize=9, label="valid memory"),
-        plt.Line2D([0], [0], marker="o", color="w", markerfacecolor=ORANGE, markersize=9, label="memory configured but broken"),
         plt.Line2D([0], [0], marker="o", color="w", markerfacecolor=PURPLE, markersize=9, label="seeded"),
-        plt.Line2D([0], [0], marker="x", color=GRAY, markersize=8, linestyle="None", label="not run"),
+        plt.Line2D([0], [0], marker="*", color="w", markerfacecolor=DARK, markersize=12, label="beat baseline"),
     ]
     ax.legend(handles=handles, loc="lower right", fontsize=9)
+    fig.text(
+        0.5,
+        -0.01,
+        "Filter: P05-P08 excluded because memory was silently broken; P01 kept only as legacy context; P14/P18 did not run.",
+        ha="center",
+        fontsize=9.4,
+        color=GRAY,
+    )
 
     save(fig, "figure-01-probe-outcomes")
 
@@ -167,10 +201,10 @@ def figure_probe_outcomes(results: dict) -> None:
 def figure_memory_stabilization(results: dict) -> None:
     probes = ["P11", "P12", "P09", "P13"]
     labels = [
-        "P11\nno memory",
-        "P12\nshared memory",
-        "P09\nno memory",
-        "P13\nno memory",
+        "P11\nexploratory\nno memory",
+        "P12\nexploratory\nshared memory",
+        "P09\nmixed style\nno memory",
+        "P13\ntwo exploratory\nno memory",
     ]
     colors = [COLORS[PROBE_META[p][1]] for p in probes]
     mean_values = [MEAN_BPB[p] for p in probes]
@@ -189,7 +223,7 @@ def figure_memory_stabilization(results: dict) -> None:
     ax.set_xticks(list(x))
     ax.set_xticklabels(labels)
     ax.set_ylabel("Validation BPB")
-    ax.set_title("Shared memory keeps high exploration closer to baseline")
+    ax.set_title("Shared memory keeps exploratory agents near the baseline")
     ax.set_ylim(0.84, 2.02)
     ax.legend(loc="upper left", fontsize=9)
     ax.grid(axis="x", visible=False)
@@ -201,7 +235,7 @@ def figure_memory_stabilization(results: dict) -> None:
     ax = axes[1]
     ax.bar(labels, worst_values, color=colors, alpha=0.82)
     ax.set_ylabel("Worst validation BPB")
-    ax.set_title("Memory reduces catastrophic outcomes")
+    ax.set_title("Shared memory reduces catastrophic outcomes")
     ax.set_ylim(0, 8.4)
     ax.grid(axis="x", visible=False)
     for i, (value, n) in enumerate(zip(worst_values, runs)):
@@ -210,7 +244,7 @@ def figure_memory_stabilization(results: dict) -> None:
     fig.text(
         0.5,
         -0.02,
-        "P11/P12/P13 use high-exploration settings; P09 is the 30-minute parallel-diverse no-memory control. Mean values come from the preserved summary report; best/worst/counts come from the JSON probe table.",
+        "Only valid-memory probes are used. P11/P12/P13 use exploratory prompt style for 45 minutes; P09 is a shorter mixed-style no-memory reference.",
         ha="center",
         fontsize=9.4,
         color=GRAY,
@@ -219,34 +253,48 @@ def figure_memory_stabilization(results: dict) -> None:
     save(fig, "figure-02-memory-stabilization")
 
 
-def figure_probe_inventory(results: dict) -> None:
-    groups = {
-        "no memory": [p for p in PROBE_META if PROBE_META[p][1] == "no_memory"],
-        "valid memory": [p for p in PROBE_META if PROBE_META[p][1] == "valid_memory"],
-        "broken memory": [p for p in PROBE_META if PROBE_META[p][1] == "broken_memory"],
-        "seeded": [p for p in PROBE_META if PROBE_META[p][1] == "seeded"],
-        "not run": [p for p in PROBE_META if PROBE_META[p][1] == "missing"],
-    }
-    labels = list(groups)
-    counts = [sum(1 for p in groups[label] if results.get(p, {}).get("n_runs", 0) > 0) for label in labels]
-    planned = [len(groups[label]) for label in labels]
-    colors = [BLUE, GREEN, ORANGE, PURPLE, GRAY]
+def figure_validity_filter(results: dict) -> None:
+    labels = [
+        "planned\nprobes",
+        "not\nrun",
+        "excluded:\nbroken memory",
+        "context only:\nlegacy timing",
+        "primary valid\nanalysis set",
+    ]
+    counts = [
+        len(PROBE_META),
+        len(NOT_RUN_PROBES),
+        len(BROKEN_MEMORY_PROBES),
+        len(CONTEXT_ONLY_PROBES),
+        len(VALID_PROBES),
+    ]
+    colors = [LIGHT_GRAY, GRAY, GRAY, GRAY, GREEN]
 
-    fig, ax = plt.subplots(figsize=(9.8, 4.8), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(9.6, 4.8), constrained_layout=True)
     x = range(len(labels))
-    ax.bar(x, planned, color=LIGHT_GRAY, label="planned")
-    ax.bar(x, counts, color=colors, label="executed")
+    ax.bar(x, counts, color=colors)
     ax.set_xticks(list(x))
     ax.set_xticklabels(labels)
     ax.set_ylabel("Probe count")
-    ax.set_title("Probe inventory: what was planned and what actually ran")
-    ax.set_ylim(0, max(planned) + 1)
+    ax.set_title("Validity filter used for public analysis")
+    ax.set_ylim(0, max(counts) + 2)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     ax.grid(axis="x", visible=False)
-    ax.legend(loc="upper right")
-    for i, (done, total) in enumerate(zip(counts, planned)):
-        ax.text(i, total + 0.12, f"{done}/{total}", ha="center", fontsize=10)
+    for i, value in enumerate(counts):
+        ax.text(i, value + 0.35, str(value), ha="center", fontsize=11, color=DARK)
 
-    save(fig, "figure-03-probe-inventory")
+    valid_runs = sum(results[p]["n_runs"] for p in VALID_PROBES)
+    broken_runs = sum(results[p]["n_runs"] for p in BROKEN_MEMORY_PROBES)
+    fig.text(
+        0.5,
+        -0.02,
+        f"The canonical figures use {valid_runs} training records. The {broken_runs} records from P05-P08 are retained only as operational evidence of a memory-pipeline failure.",
+        ha="center",
+        fontsize=9.4,
+        color=GRAY,
+    )
+
+    save(fig, "figure-03-validity-filter")
 
 
 def main() -> None:
@@ -254,7 +302,7 @@ def main() -> None:
     results = load_results()
     figure_probe_outcomes(results)
     figure_memory_stabilization(results)
-    figure_probe_inventory(results)
+    figure_validity_filter(results)
 
 
 if __name__ == "__main__":

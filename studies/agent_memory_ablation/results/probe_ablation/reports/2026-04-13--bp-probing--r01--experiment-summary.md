@@ -20,6 +20,11 @@ linked_experiments:
 **Autore**: Emanuele Rimoldi (analisi automatizzata con Claude)
 **Linea sperimentale**: BP 2×2 Probing — Parallelizzazione e Memoria negli Agenti Autonomi
 
+> **Nota archivio, luglio 2026**: questo report conserva la lettura storica
+> dell'esperimento. L'analisi pubblica canonica esclude `P05`-`P08` perché la
+> memoria era configurata ma silenziosamente rotta. Usare
+> `../../validity_filter.md` per il set valido corrente.
+
 ---
 
 ## 1. Executive Summary
@@ -360,7 +365,7 @@ Tassi di successo per categoria strategica:
 | Directory | Contenuto |
 |-----------|-----------|
 | `runs/experiment_probe_P01/` — `runs/experiment_probe_P17/` | 16 directory con workspace agenti, training logs, commit history |
-| Totale run: 293 validi + 7 nulli | JSONL logs in `training_runs.jsonl` per ogni agente |
+| Totale run storici: 293 + 7 nulli | JSONL logs in `training_runs.jsonl` per ogni agente |
 
 ### Bundle di analisi
 

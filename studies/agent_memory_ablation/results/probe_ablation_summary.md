@@ -4,6 +4,15 @@
 **Period**: April 2026 (fourth study)
 **Objective**: Rapid probing study to test the BP four-term decomposition on a redesigned experimental substrate, fixing the five confounds identified in the calibration design study's design audit and discovering what actually drives (or blocks) agent performance.
 
+> **Validity note, July 2026**: this is a preserved historical report. The
+> public study README and figures now use a stricter valid-analysis set.
+> `P05`-`P08` are excluded from canonical memory claims because memory was
+> configured but silently broken. `P01` is context-only because it used an older
+> training template that ran about 315 seconds per attempt. The current public
+> analysis uses 247 training records from `P02`, `P03`, `P04`, `P09`, `P10`,
+> `P11`, `P12`, `P13`, `P15`, `P16`, and `P17`. Mentions of 293 records,
+> `P05`, or `P07` below are archival unless explicitly tied to the memory bug.
+
 ---
 
 ## Research Question
@@ -70,10 +79,10 @@ Additionally, a **symlink fragility bug** was discovered in P12: `git checkout` 
 |------|----------|--------|-------|
 | Wave 1 | ~5.5h | P01-P06 | Signal detection (6 base configurations) |
 | Wave 2 | ~5.5h | P07-P10 | Extended budgets (30-45 min) |
-| Wave 3 | ~2h | P11-P13 | High-temperature, memory fixes applied |
+| Wave 3 | ~2h | P11-P13 | Exploratory search, memory fixes applied |
 | Wave 4 | ~1.5h | P15-P18 | Seeding, full stack |
 
-**Total**: 16 probes executed (P14 not executed, P18 executed later), 293 valid training runs, 7 null runs (all P13).
+**Historical total**: 16 probes executed (P14 not executed, P18 executed later), 293 training records, 7 null runs (all P13). The canonical public analysis filters this to 247 records; see `validity_filter.md`.
 
 ### Task and metrics
 
@@ -247,7 +256,7 @@ High temperature produces more iterations per agent (mean 17.2 vs 9.2) but each 
 
 4. **Counterintuitive finding: homogeneity beats diversity**: Temperature diversity does NOT produce strategy diversity (Jaccard paradox). Homogeneous agents outperform diverse agents (p<0.001, r=0.581). The G term is not effectively controlled by temperature alone.
 
-5. **Five confounds from the calibration design study addressed**: Sequential execution (no CPU contention), temperature diversity (attempted homogeneity fix), memory bug fixes (valid epsilon test), shorter training (more room for measurable improvement), extended budgets (sufficient iterations).
+5. **Five confounds from the calibration design study addressed**: Sequential execution (no CPU contention), search-style diversity (attempted homogeneity fix), memory bug fixes (valid epsilon test), shorter training (more room for measurable improvement), extended budgets (sufficient iterations).
 
 6. **Three critical memory bugs discovered and fixed**: The memory system was silently non-functional in P05-P08. Without discovering these bugs, the memory effect would have been incorrectly reported as null.
 
@@ -255,7 +264,7 @@ High temperature produces more iterations per agent (mean 17.2 vs 9.2) but each 
 
 1. **No replication**: Each probe ran once. The statistics are run-level (within-probe), not probe-level. Cannot make inferential claims about configuration effects with confidence.
 
-2. **P14 missing**: The private memory + high-temperature test was not executed. This was the key test for whether private memory alone can correct the degradation spiral seen in P11.
+2. **P14 missing**: The private memory + exploratory-search test was not executed. This was the key test for whether private memory alone can correct the degradation spiral seen in P11.
 
 3. **Full decomposition not computed**: The phi + G - epsilon accounting identity was not formally tested on the probe data. The evidence is qualitative (P11 vs P12) rather than quantitative.
 

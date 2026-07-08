@@ -1,9 +1,14 @@
 # Figure Catalog
 
+> **Archive note**: this catalog describes historical design-audit figures, not
+> the current public figures. The canonical public figures exclude `P05`-`P08`
+> because memory was configured but silently broken. Use
+> `../../validity_filter.md` for the current valid-analysis set.
+
 ## Figure 1: Main Comparison (figure-01-main-comparison.pdf)
 
 - **Purpose**: Show the full distribution of val_bpb across all 16 probes, grouped by experimental condition, with design factors visible.
-- **Data source**: All 293 valid runs from runs/experiment_probe_P*/
+- **Data source**: Historical 293-record archive from runs/experiment_probe_P*/
 - **Plotted variables**: Box-and-whisker of val_bpb per probe, with individual points overlaid. Stars mark below-baseline runs.
 - **Color coding**: Gray=single no-memory, Blue=single+memory, Green=parallel, Purple=shared memory, Pink=full stack
 - **Key observation**: Below-baseline successes (gold stars) appear only in P01, P05, P07, P12, P15. The vast majority of runs cluster above baseline. P11 and P13 show high variance and extreme degradation.
