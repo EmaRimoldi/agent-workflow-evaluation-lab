@@ -22,7 +22,7 @@ This gives the repo a concrete experimental question:
 ## Fastest Reading Path
 
 1. Read the selected benchmark baseline:
-   [`studies/baseline_headroom/README.md`](../studies/baseline_headroom/README.md).
+   [`studies/baseline/README.md`](../studies/baseline/README.md).
 
    The current baseline was chosen after 161 controlled non-agentic evaluations.
    The selected starting model is "width 30, lower learning rate" (internal ID
@@ -30,7 +30,7 @@ This gives the repo a concrete experimental question:
    `target_val_bpb = 0.824`.
 
 2. Read the strongest agent-workflow finding:
-   [`studies/bp_probe_ablation/results/probe_ablation_summary.md`](../studies/bp_probe_ablation/results/probe_ablation_summary.md).
+   [`studies/agent_memory_ablation/README.md`](../studies/agent_memory_ablation/README.md).
 
    The most informative comparison is P11 vs P12:
 
@@ -43,7 +43,7 @@ This gives the repo a concrete experimental question:
    like a random walk, while shared memory reduces catastrophic repeats.
 
 3. Read why the task had to be calibrated:
-   [`studies/calibration_design/results/calibration_design_summary.md`](../studies/calibration_design/results/calibration_design_summary.md).
+   [`studies/evaluator_calibration/results/evaluator_calibration_summary.md`](../studies/evaluator_calibration/results/evaluator_calibration_summary.md).
 
    This study made evaluation deterministic. Five consecutive baseline runs
    produced identical `val_bpb = 0.811222`, which means differences can be
@@ -60,9 +60,11 @@ This gives the repo a concrete experimental question:
 
 The most useful result figures are:
 
-- [`studies/baseline_headroom/results/figures/figure-04-recommended-baseline-detail.png`](../studies/baseline_headroom/results/figures/figure-04-recommended-baseline-detail.png)
-- [`studies/bp_probe_ablation/results/ablation__bp-4term-probing__active/figures/design_audit/figure-04-task-ceiling.png`](../studies/bp_probe_ablation/results/ablation__bp-4term-probing__active/figures/design_audit/figure-04-task-ceiling.png)
-- [`studies/calibration_design/results/calibration__2x2-diversity-memory__superseded/figures/figure-01-main-comparison.png`](../studies/calibration_design/results/calibration__2x2-diversity-memory__superseded/figures/figure-01-main-comparison.png)
+- [`studies/figures/figure-01-study-map.png`](../studies/figures/figure-01-study-map.png)
+- [`studies/baseline/results/figures/figure-04-recommended-baseline-detail.png`](../studies/baseline/results/figures/figure-04-recommended-baseline-detail.png)
+- [`studies/agent_memory_ablation/results/figures/figure-01-probe-outcomes.png`](../studies/agent_memory_ablation/results/figures/figure-01-probe-outcomes.png)
+- [`studies/agent_memory_ablation/results/figures/figure-02-memory-stabilization.png`](../studies/agent_memory_ablation/results/figures/figure-02-memory-stabilization.png)
+- [`studies/evaluator_calibration/results/calibration__2x2-diversity-memory__superseded/figures/figure-01-main-comparison.png`](../studies/evaluator_calibration/results/calibration__2x2-diversity-memory__superseded/figures/figure-01-main-comparison.png)
 - [`studies/compute_allocation_calibration/results/figures/figure-01-fixed-time-compute-loss.png`](../studies/compute_allocation_calibration/results/figures/figure-01-fixed-time-compute-loss.png)
 - [`studies/compute_allocation_calibration/results/figures/figure-02-fixed-step-latency-cost.png`](../studies/compute_allocation_calibration/results/figures/figure-02-fixed-step-latency-cost.png)
 - [`studies/swarm_baselines/results/figures/figure-01-validation-bpb-over-time.png`](../studies/swarm_baselines/results/figures/figure-01-validation-bpb-over-time.png)

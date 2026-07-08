@@ -1,10 +1,10 @@
 # Demo Script
 
-This is the shortest coherent demo of AgentOps Lab.
+This is the shortest coherent demo of Agent Workflow Evaluation Lab.
 
 ## 60-Second Demo
 
-AgentOps Lab measures whether a more complex AI-agent workflow is worth running.
+Agent Workflow Evaluation Lab measures whether a more complex AI-agent workflow is worth running.
 
 The benchmark is deliberately concrete: agents edit one CIFAR-10 training file,
 `autoresearch/train.py`, then run evaluations and try to reduce `val_bpb`
@@ -68,9 +68,9 @@ are still present for provenance, but the canonical route is `agentops`.
 Files:
 
 - `studies/README.md`
-- `studies/baseline_headroom/README.md`
-- `studies/bp_probe_ablation/results/probe_ablation_summary.md`
-- `studies/calibration_design/results/calibration_design_summary.md`
+- `studies/baseline/README.md`
+- `studies/agent_memory_ablation/README.md`
+- `studies/evaluator_calibration/results/evaluator_calibration_summary.md`
 
 What to say:
 
@@ -81,7 +81,7 @@ what was run, the result, the caveat, and the first file to read.
 
 File:
 
-- `studies/bp_probe_ablation/results/probe_ablation_summary.md`
+- `studies/agent_memory_ablation/README.md`
 
 Key numbers:
 

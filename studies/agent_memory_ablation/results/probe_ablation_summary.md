@@ -98,7 +98,7 @@ Additionally, a **symlink fragility bug** was discovered in P12: `git checkout` 
 | Far worse (>50% above baseline) | 85 |
 | Worst run | 7.876 (P13) |
 
-![Task ceiling](ablation__bp-4term-probing__active/figures/design_audit/figure-04-task-ceiling.png)
+![Task ceiling](probe_ablation/figures/design_audit/figure-04-task-ceiling.png)
 
 **Figure interpretation**: Panel A shows the val_bpb distribution across all 293 runs. The mass sits between 0.95 and 1.25, with a heavy right tail extending to 7.88. The baseline (dashed red line at 0.926) is at the left edge of the distribution — almost all agent modifications make things worse. Panel B confirms this per-cell: d00 (single/no-memory) has the highest success rate (~25%) but this comes from the calibration design study, which used longer training budgets. Panel C shows strategy win rates: only `optimization` changes occasionally succeed; `architecture`, `data_pipeline`, and `regularization` changes never beat baseline in 60s training.
 
@@ -131,7 +131,7 @@ All three tests survive Bonferroni correction (alpha=0.0083).
 
 ### 3. Memory effect: stabilization, not breakthroughs
 
-![Memory anchoring](ablation__bp-4term-probing__active/figures/design_audit/figure-03-memory-anchoring.png)
+![Memory anchoring](probe_ablation/figures/design_audit/figure-03-memory-anchoring.png)
 
 **Figure interpretation**: Panel A shows strategy switching probability over time — memory cells (d10, d11) show lower switching rates, indicating the anchoring effect from the calibration design study is still present. Panel B plots val_bpb vs memory context depth (d10): no correlation (r=0.04, p=0.747). Accumulating more history does not improve performance. Panel C shows exploration breadth over time — all cells plateau at 3-5 unique strategy categories by run 15, regardless of memory.
 
@@ -148,7 +148,7 @@ All three tests survive Bonferroni correction (alpha=0.0083).
 
 Mann-Whitney U=189.0, **p<0.001**, r=0.581 (large effect). Survives Bonferroni correction.
 
-![Agent homogeneity](ablation__bp-4term-probing__active/figures/design_audit/figure-02-agent-homogeneity.png)
+![Agent homogeneity](probe_ablation/figures/design_audit/figure-02-agent-homogeneity.png)
 
 **Figure interpretation**: Panel A shows strategy category distributions per cell — they are surprisingly similar across all four 2x2 cells. Panel B-C show per-agent strategies within d01 and d11: agents within the same experiment explore largely the same categories. The expected benefit of temperature diversity (different agents explore different strategies) does not materialize.
 
@@ -229,7 +229,7 @@ High temperature produces more iterations per agent (mean 17.2 vs 9.2) but each 
 
 ### 2x2 interaction (from design audit)
 
-![2x2 summary](ablation__bp-4term-probing__active/figures/design_audit/figure-06-2x2-summary.png)
+![2x2 summary](probe_ablation/figures/design_audit/figure-06-2x2-summary.png)
 
 **Figure interpretation**: Panel A shows best-of-rep across the four 2x2 cells. d00 has the widest spread and includes the best individual result (0.824). Panel C shows the interaction: single agents improve with memory (d00 -> d10), parallel agents slightly improve with memory (d01 -> d11), and the lines are roughly parallel — no strong interaction. Panel D shows Jensen gap is much larger for d00 and d11 (high cost variance) than d10 and d01 (more stable costs).
 

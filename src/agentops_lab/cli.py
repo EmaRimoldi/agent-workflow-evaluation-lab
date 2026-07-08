@@ -1,4 +1,4 @@
-"""Official CLI for AgentOps Lab."""
+"""Official CLI for Agent Workflow Evaluation Lab."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import argparse
 def main(argv=None) -> None:
     parser = argparse.ArgumentParser(
         prog="agentops",
-        description="Run AgentOps Lab studies and analysis workflows.",
+        description="Run Agent Workflow Evaluation Lab studies and analysis workflows.",
     )
     commands = [
         "parallel",

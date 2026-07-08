@@ -1,7 +1,7 @@
 # Reviewer Checklist
 
 This checklist is for a technical reviewer who has only a few minutes and wants
-to know whether AgentOps Lab is real, inspectable, and honest about its limits.
+to know whether Agent Workflow Evaluation Lab is real, inspectable, and honest about its limits.
 
 ## Product Clarity
 
@@ -28,9 +28,9 @@ to know whether AgentOps Lab is real, inspectable, and honest about its limits.
 
 | Claim | Evidence | Status |
 |---|---|---|
-| The benchmark starting model was calibrated before agent claims. | `studies/baseline_headroom/README.md` | 161 controlled evaluations; 1170-update runs are the decision evidence. |
-| Training noise can be removed from the evaluator. | `studies/calibration_design/results/calibration_design_summary.md` | Five identical baseline runs at `val_bpb = 0.811222`. |
-| Shared memory can reduce destructive exploration in this substrate. | `studies/bp_probe_ablation/results/probe_ablation_summary.md` | P12 beats P11 on best and mean `val_bpb`, with `p < 0.001`. |
+| The benchmark starting model was calibrated before agent claims. | `studies/baseline/README.md` | 161 controlled evaluations; 1170-update runs are the decision evidence. |
+| Training noise can be removed from the evaluator. | `studies/evaluator_calibration/results/evaluator_calibration_summary.md` | Five identical baseline runs at `val_bpb = 0.811222`. |
+| Shared memory can reduce destructive exploration in this substrate. | `studies/agent_memory_ablation/README.md` | P12 beats P11 on best and mean `val_bpb`, with `p < 0.001`. |
 | Compute allocation can confound fixed-time parallel evaluation. | `studies/compute_allocation_calibration/README.md` | Fixed-time trend plus fixed-step control. |
 | The theory layer is not overclaimed. | `studies/theory_validation/results/README.md` | Explicitly states cleaner theory but insufficient empirical validation. |
 

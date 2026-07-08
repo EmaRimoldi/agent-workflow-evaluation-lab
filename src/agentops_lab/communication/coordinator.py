@@ -1,4 +1,4 @@
-"""Local coordinator API backed by the AgentOps Lab blackboard.
+"""Local coordinator API backed by the Agent Workflow Evaluation Lab blackboard.
 
 Provides a `Coordinator` class interface backed by local append-only JSONL
 storage instead of a networked coordination service.

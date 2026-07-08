@@ -1,8 +1,8 @@
-# AgentOps Lab
+# Agent Workflow Evaluation Lab
 
-AgentOps Lab is a benchmark harness for measuring whether AI-agent workflows
-actually improve search quality, cost, and auditability on a concrete ML
-optimization task.
+Agent Workflow Evaluation Lab is a benchmark harness for measuring whether
+AI-agent workflows actually improve search quality, cost, and auditability on a
+concrete ML optimization task.
 
 The built-in benchmark is `autoresearch/`: agents edit a CIFAR-10 `train.py`,
 run evaluations, and try to reduce `val_bpb` (validation loss; lower is better).
@@ -20,13 +20,15 @@ If you are reviewing this repository quickly:
 3. Read [`docs/reviewer_checklist.md`](docs/reviewer_checklist.md) to verify
    what is built, what is evidence, and what is still open.
 4. Use [`studies/README.md`](studies/README.md) for the study-by-study map.
-5. Use [`docs/reproducibility.md`](docs/reproducibility.md) for local and
+5. Use [`studies/experiment_catalog.md`](studies/experiment_catalog.md) for the
+   compact inventory of preserved experiment bundles.
+6. Use [`docs/reproducibility.md`](docs/reproducibility.md) for local and
    Claude Code setup.
 
 ## What This Is For
 
-Most agent demos answer "can an agent do the task?" AgentOps Lab asks whether a
-workflow is worth running:
+Most agent demos answer "can an agent do the task?" This repository asks
+whether a workflow is worth running:
 
 - Does parallelization improve quality, or only spend more tokens?
 - When does swarm communication create signal instead of coordination overhead?
@@ -49,10 +51,10 @@ Key examples:
 
 | Evidence | What it shows | Start here |
 |---|---|---|
-| Starting model calibration | 161 controlled evaluations selected the common starting `train.py`: validation loss before edits `val_bpb = 0.841354`, success threshold `val_bpb <= 0.824` | [`studies/baseline_headroom/README.md`](studies/baseline_headroom/README.md) |
-| Shared memory effect | P12 shared-memory exploration found better and more stable results than P11 high-temperature exploration without memory: best `0.914` vs `0.934`, mean `1.049` vs `1.816` | [`studies/bp_probe_ablation/results/probe_ablation_summary.md`](studies/bp_probe_ablation/results/probe_ablation_summary.md) |
+| Starting model calibration | 161 controlled evaluations selected the common starting `train.py`: validation loss before edits `val_bpb = 0.841354`, success threshold `val_bpb <= 0.824` | [`studies/baseline/README.md`](studies/baseline/README.md) |
+| Shared memory effect | P12 shared-memory exploration found better and more stable results than P11 high-temperature exploration without memory: best `0.914` vs `0.934`, mean `1.049` vs `1.816` | [`studies/agent_memory_ablation/README.md`](studies/agent_memory_ablation/README.md) |
 | Historical swarm baseline | Blackboard-style swarm runs reached lower validation BPB than an independent-parallel baseline: `1.041477` vs `1.113130` | [`studies/swarm_baselines/README.md`](studies/swarm_baselines/README.md) |
-| Deterministic evaluator | Five baseline runs produced identical `val_bpb = 0.811222`, removing training noise as the main explanation | [`studies/calibration_design/results/calibration_design_summary.md`](studies/calibration_design/results/calibration_design_summary.md) |
+| Deterministic evaluator | Five baseline runs produced identical `val_bpb = 0.811222`, removing training noise as the main explanation | [`studies/evaluator_calibration/results/evaluator_calibration_summary.md`](studies/evaluator_calibration/results/evaluator_calibration_summary.md) |
 | Compute allocation calibration | Fixed-time parallel training completed fewer optimizer updates and looked worse; fixed-step evaluation preserved quality but changed latency | [`studies/compute_allocation_calibration/README.md`](studies/compute_allocation_calibration/README.md) |
 
 ## What Works Today
@@ -117,13 +119,13 @@ docs/
   reproducibility.md            local setup and Claude Code reproduction notes
 
 studies/
-  swarm_baselines/              blackboard coordination evidence
+  baseline/                     starting model calibration evidence
+  evaluator_calibration/        deterministic evaluator evidence
   compute_allocation_calibration/
                                   CPU compute-allocation and fixed-step evidence
+  agent_memory_ablation/        memory and exploration ablation evidence
+  swarm_baselines/              blackboard coordination evidence
   theory_validation/            theorem/protocol validation evidence
-  calibration_design/           evaluator and design calibration evidence
-  bp_probe_ablation/            BP four-term probing evidence
-  baseline_headroom/            starting model calibration evidence
 
 autoresearch/
   CIFAR-10 train.py optimization task used by the agents
@@ -196,7 +198,8 @@ one package: `agentops_lab`.
 
 ## Research Frame
 
-AgentOps Lab evaluates agentic systems through a decomposition of improvement:
+Agent Workflow Evaluation Lab evaluates agentic systems through a decomposition
+of improvement:
 
 ```math
 \Delta = \log(\kappa_0 / \kappa) + \phi + G - \epsilon
@@ -217,7 +220,7 @@ Start here:
 
 ## Repository Scope
 
-AgentOps Lab keeps the runnable runtime, evaluation protocols, curated study
-summaries, and AutoResearch substrate in one repository. Raw run logs, local
-data, transient agent workspaces, and private process notes are intentionally
-out of scope.
+Agent Workflow Evaluation Lab keeps the runnable runtime, evaluation protocols,
+curated study summaries, and AutoResearch substrate in one repository. Raw run
+logs, local data, transient agent workspaces, and private process notes are
+intentionally out of scope.

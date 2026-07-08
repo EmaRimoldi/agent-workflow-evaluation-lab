@@ -43,7 +43,7 @@ PYTHONPATH=src python -m agentops_lab.cli --help
 
 ## Claude Code Setup
 
-AgentOps Lab invokes Claude Code headlessly through the `claude` binary. The
+Agent Workflow Evaluation Lab invokes Claude Code headlessly through the `claude` binary. The
 current runner builds commands in this shape:
 
 ```bash

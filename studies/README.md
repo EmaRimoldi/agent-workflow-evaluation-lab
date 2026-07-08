@@ -1,174 +1,54 @@
 # Studies
 
-This directory is the empirical spine of AgentOps Lab. Each study should be read
-with the same structure:
+This directory is the empirical spine of Agent Workflow Evaluation Lab. Each
+folder is one evidence bundle: a question, what was run, the result, the caveat,
+and the file a reviewer should read first.
 
-1. What question was being tested?
-2. What was actually run?
-3. What did the run show?
-4. What caveat or failure did it expose?
-5. Which file should a reviewer read first?
-
-The public tree keeps curated summaries, result tables, and figures. Raw run
-directories, transient agent workspaces, and large local logs are intentionally
-left out.
-
-## Vocabulary
-
-- **Study**: a complete evidence bundle under `studies/`.
-- **Pilot**: an early feasibility study used to build instrumentation or expose
-  design problems.
-- **Probe**: one configuration inside the probe ablation matrix. Labels such as
-  `P11` and `P12` are retained because they identify exact experimental cells.
-- **Wave**: an execution batch inside a study. It is scheduling metadata, not a
-  public milestone.
-- **Confirmatory run**: a run that uses fixed-step evaluation, preserved logs,
-  and a pre-registered success threshold.
+![Study map](figures/figure-01-study-map.png)
 
 ## Reading Order
 
-Read the studies in this order if you want the cleanest narrative:
+1. [`baseline/`](baseline/) - selects the common starting `train.py`.
+2. [`evaluator_calibration/`](evaluator_calibration/) - proves the evaluator can
+   be made deterministic.
+3. [`compute_allocation_calibration/`](compute_allocation_calibration/) - shows
+   why fixed-time parallel evaluation can confound quality with compute.
+4. [`agent_memory_ablation/`](agent_memory_ablation/) - tests memory and
+   exploration in agent workflows.
+5. [`swarm_baselines/`](swarm_baselines/) - preserves historical blackboard
+   swarm evidence.
+6. [`theory_validation/`](theory_validation/) - audits the mathematical frame
+   and estimator assumptions.
 
-1. [`baseline_headroom/`](baseline_headroom/) - current starting model calibration.
-2. [`bp_probe_ablation/`](bp_probe_ablation/) - strongest current agentic signal.
-3. [`calibration_design/`](calibration_design/) - deterministic evaluator and
-   design audit that motivated the probe redesign.
-4. [`theory_validation/`](theory_validation/) - theorem, estimator, and protocol
-   audit.
-5. [`compute_allocation_calibration/`](compute_allocation_calibration/) -
-   fixed-time vs fixed-step compute-allocation evidence.
-6. [`swarm_baselines/`](swarm_baselines/) - historical swarm context.
+For a compact table of every experiment bundle, read
+[`experiment_catalog.md`](experiment_catalog.md).
 
-## Study Map
+## Experiment Bundles
 
-### `baseline_headroom/`
+| Study | Role | What was run | Main result | Read first |
+| --- | --- | --- | --- | --- |
+| [`baseline/`](baseline/) | Starting point calibration | 161 controlled evaluations of candidate starting models and edits | selected starting model: `val_bpb = 0.841354`, target `<= 0.824` | [`baseline/README.md`](baseline/README.md) |
+| [`evaluator_calibration/`](evaluator_calibration/) | Deterministic evaluator | fixed-step baseline verification plus memory/no-memory calibration reps | five repeated baseline runs produced identical `val_bpb = 0.811222` | [`evaluator_calibration/README.md`](evaluator_calibration/README.md) |
+| [`compute_allocation_calibration/`](compute_allocation_calibration/) | Compute fairness | fixed-time CPU scaling, fixed-step pair benchmark, archived 2x2 pilot | fixed-time parallel workers completed fewer optimizer updates; fixed-step held quality constant and exposed latency | [`compute_allocation_calibration/README.md`](compute_allocation_calibration/README.md) |
+| [`agent_memory_ablation/`](agent_memory_ablation/) | Current agentic signal | 16 executed probes, 293 valid training runs, memory/exploration/seeding variations | shared memory stabilized high exploration: P12 best `0.914`, mean `1.049` vs P11 best `0.934`, mean `1.816` | [`agent_memory_ablation/README.md`](agent_memory_ablation/README.md) |
+| [`swarm_baselines/`](swarm_baselines/) | Historical swarm context | two-agent blackboard swarm runs and model comparisons | preserved swarm runs reached lower `val_bpb` than independent parallel baseline | [`swarm_baselines/README.md`](swarm_baselines/README.md) |
+| [`theory_validation/`](theory_validation/) | Theory/protocol audit | theorem review, estimator audit, Jensen/noise checks, context-pressure analysis | narrowed the theoretical claim and documented assumptions still needed for validation | [`theory_validation/README.md`](theory_validation/README.md) |
 
-**Status**: active starting model calibration.
+## Vocabulary
 
-**Question**: which `autoresearch/train.py` should every future agent workflow
-start from?
+- **Study**: one evidence bundle under `studies/`.
+- **Probe**: one configuration inside the agent-memory ablation matrix. Labels
+  such as `P11` and `P12` are retained because they identify exact experimental
+  cells.
+- **Wave**: an execution batch inside a study. It is scheduling metadata, not a
+  public milestone.
+- **Successful training attempt**: a run that produced a valid evaluator result,
+  not a separate experiment.
+- **Confirmatory run**: a future run with fixed-step evaluation, preserved raw
+  logs, and a pre-registered success threshold.
 
-**What was run**: 161 controlled evaluations across starting-model/edit panels.
-Only the 1170-update runs are used for the decision; 585-update runs are
-preserved as exploratory/debugging evidence.
+## Completeness
 
-**Main result**: the selected starting model is "width 30, lower learning
-rate" (internal ID `width30_lr_low`): `val_bpb = 0.841354` before edits, with
-success threshold `target_val_bpb = 0.824`. It preserves multiple useful
-improvement categories while keeping failed edits.
-
-**Caveat**: This is not an agent result. It chooses the common starting point so
-later agent comparisons are fair.
-
-**Read first**:
-[`baseline_headroom/README.md`](baseline_headroom/README.md).
-
-### `bp_probe_ablation/`
-
-**Status**: active signal-detection study.
-
-**Question**: With the known confounds controlled, do the BP terms produce a
-measurable empirical pattern?
-
-**What was run**: 16 executed probes, 293 valid training runs, sequential
-execution to remove CPU contention, and a matrix varying parallelism,
-temperature diversity, shared memory, private memory, seeding, and budget.
-
-**Main result**: The clearest signal is shared memory as variance reduction.
-P12, the high-temperature shared-memory probe, beat P11 high-temperature
-exploration without memory: best `val_bpb = 0.914` vs `0.934`, mean `1.049` vs
-`1.816`, Mann-Whitney `p < 0.001`.
-
-**Caveat**: This is one replicate per probe, so it is a probing study rather
-than a confirmatory benchmark. It also exposed that the task ceiling was still
-tight: only 1.9 percent of non-baseline runs beat baseline.
-
-**Read first**:
-[`bp_probe_ablation/results/probe_ablation_summary.md`](bp_probe_ablation/results/probe_ablation_summary.md).
-
-### `calibration_design/`
-
-**Status**: superseded by `bp_probe_ablation/`, but still important.
-
-**Question**: Can the evaluator be made deterministic, and is the memory/no
-memory contrast large enough to justify a full 2x2 study?
-
-**What was run**: deterministic fixed-step evaluation, five baseline
-verification runs, and 5 replicates each of `d00` and `d10`.
-
-**Main result**: Five unmodified baseline runs produced identical
-`val_bpb = 0.811222`, proving the evaluator could remove training noise. The
-`d00` vs `d10` calibration was measurable, but the effect went the wrong way:
-memory was worse on best-of-rep (`Cohen's d = 0.66` against d10).
-
-**Caveat**: The study found design problems rather than a final result:
-run-count thresholds, memory anchoring, training-time confounds, and a task
-ceiling. Those findings directly motivated the probe ablation study.
-
-**Read first**:
-[`calibration_design/results/calibration_design_summary.md`](calibration_design/results/calibration_design_summary.md).
-
-### `theory_validation/`
-
-**Status**: theory and protocol audit, not an empirical success claim.
-
-**Question**: Does the BP decomposition theorem and its estimators survive a
-close audit against the pilot evidence?
-
-**What was run**: formal theorem review, estimator refactor, mode-label
-coverage audit, repeated incumbent evaluations, Jensen-gap checks, verifier
-noise analysis, and context-pressure feasibility analysis.
-
-**Main result**: The original claim was too broad. The current defensible
-position is a narrower single-axis theorem with explicit assumptions and a
-Jensen remainder. The protocol is cleaner, but the empirical validation remains
-insufficient.
-
-**Caveat**: The retained PDFs are source theory artifacts. Intermediate text
-extractions and stale TeX were removed because they duplicated the PDFs and made
-the reading path unclear.
-
-**Read first**:
-[`theory_validation/results/README.md`](theory_validation/results/README.md).
-
-### `compute_allocation_calibration/`
-
-**Status**: archived compute-allocation calibration.
-
-**Question**: When agent workflows run training jobs in parallel on shared CPU,
-are we measuring agent quality or the compute budget each worker actually
-receives?
-
-**What was run**: a fixed-time CPU scaling benchmark at N=1,2,4,8; a fixed-step
-N=2 pair benchmark; and the original 2x2 agent pilot that exposed the confound.
-
-**Main result**: Fixed-time parallel training completed fewer optimizer updates
-and validation loss worsened. Fixed-step evaluation held validation loss
-constant while exposing the real cost as worker latency.
-
-**Caveat**: The evidence is CPU-only. It is still the methodological reason
-later agent comparisons use fixed-step evaluation or explicit compute accounting.
-
-**Read first**:
-[`compute_allocation_calibration/README.md`](compute_allocation_calibration/README.md).
-
-### `swarm_baselines/`
-
-**Status**: historical context.
-
-**Question**: How did earlier blackboard-style swarm coordination behave before
-the current AgentOps Lab package was unified?
-
-**What was run**: archived analyses of two-agent swarm runs, model comparisons,
-and swarm-vs-parallelisation comparisons from the earlier swarm codebase.
-
-**Main result**: The artifacts are useful for understanding the blackboard
-coordination design: shared claims, pull-best behavior, cross-agent influence,
-and model comparison under a historical task setup.
-
-**Caveat**: These are not normalized `d00` / `d10` / `d01` / `d11` rows for the
-current BP decomposition. They are context for the swarm implementation and
-should not be mixed directly with the current calibrated studies.
-
-**Read first**:
-[`swarm_baselines/README.md`](swarm_baselines/README.md).
+The public tree keeps curated summaries, result tables, and figures. Raw run
+directories, transient agent workspaces, local datasets, and large private logs
+are intentionally left out unless a study explicitly says otherwise.

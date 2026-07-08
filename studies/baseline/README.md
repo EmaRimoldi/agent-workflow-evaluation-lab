@@ -157,8 +157,8 @@ report separately: agent thinking time and evaluator training time
 - Summary table: `results/tables/baseline_summary.csv`
 - Trial table: `results/tables/trial_results.csv`
 - Machine-readable summary: `results/tables/baseline_headroom_summary.json`
-- Figure generator: `../../scripts/plot_baseline_headroom.py`
+- Figure generator: `../../scripts/plot_baseline.py`
 
-Legacy note: the folder and raw tables still use historical names such as
+Legacy note: some raw tables still use historical names such as
 `baseline_headroom`, `q3`, and `q_star`. In this README, those mean starting
 model calibration and success-threshold validation loss.

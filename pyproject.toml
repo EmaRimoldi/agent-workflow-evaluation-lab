@@ -1,7 +1,7 @@
 [project]
-name = "agentops-lab"
+name = "agent-workflow-evaluation-lab"
 version = "0.1.0"
-description = "Reliability, evaluation, and operations framework for AI agent systems"
+description = "Benchmark harness for evaluating AI-agent workflow reliability, search quality, and cost"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

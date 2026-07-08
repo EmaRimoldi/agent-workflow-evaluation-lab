@@ -1,4 +1,4 @@
-"""Map AutoResearch result files into AgentOps Lab structures.
+"""Map AutoResearch result files into Agent Workflow Evaluation Lab structures.
 
 AutoResearch runs write results to:
   results/trajectories/<RUN_ID>/<agent_id>.jsonl
@@ -7,7 +7,7 @@ AutoResearch runs write results to:
   results/weights/<RUN_ID>/<agent_id>/model.pt
   results.tsv  (tab-separated: commit, val_bpb, memory_gb, status, description)
 
-This adapter reads those formats and maps them into AgentOps Lab result objects.
+This adapter reads those formats and maps them into Agent Workflow Evaluation Lab result objects.
 """
 
 from __future__ import annotations

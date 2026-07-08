@@ -1,6 +1,6 @@
 # Theory Validation Study
 
-This folder audits the mathematical frame behind AgentOps Lab. It is not a
+This folder audits the mathematical frame behind Agent Workflow Evaluation Lab. It is not a
 claim that the theory has been empirically validated.
 
 Current status:

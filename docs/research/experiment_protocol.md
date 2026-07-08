@@ -1,6 +1,6 @@
 # Experiment Protocol
 
-This protocol describes how to run a matched AgentOps Lab experiment using the
+This protocol describes how to run a matched Agent Workflow Evaluation Lab experiment using the
 canonical `agentops` CLI. For machine setup and Claude Code authentication, read
 [`../reproducibility.md`](../reproducibility.md) first.
 
@@ -47,7 +47,7 @@ claude auth status
 ## Benchmark Baseline
 
 The current calibrated baseline comes from
-[`../../studies/baseline_headroom/README.md`](../../studies/baseline_headroom/README.md):
+[`../../studies/baseline/README.md`](../../studies/baseline/README.md):
 
 ```text
 starting_model = width 30, lower learning rate

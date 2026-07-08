@@ -1,4 +1,4 @@
-"""AgentOps Lab public runtime package."""
+"""Agent Workflow Evaluation Lab public runtime package."""
 
 from agentops_lab.config import AgentConfig, ExperimentConfig
 

@@ -12,8 +12,8 @@ This follow-up benchmark answers the complementary question: if each training jo
 
 ## Method
 
-- Source workspace: `studies/calibration_design/runs/calibration__2x2-diversity-memory__superseded/d00/rep1/mode_single_long/agent_0/workspace`
-- Training substrate: deterministic CIFAR-10 CNN training script from the calibration-design workspace
+- Source workspace: `studies/evaluator_calibration/runs/calibration__2x2-diversity-memory__superseded/d00/rep1/mode_single_long/agent_0/workspace`
+- Training substrate: deterministic CIFAR-10 CNN training script from the evaluator-calibration workspace
 - Device: CPU
 - Fixed training length: 300 steps per worker
 - Conditions:

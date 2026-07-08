@@ -1,6 +1,6 @@
-# AgentOps Lab Architecture
+# Agent Workflow Evaluation Lab Architecture
 
-AgentOps Lab exposes one runtime package, `agentops_lab`. The architecture is
+Agent Workflow Evaluation Lab exposes one runtime package, `agentops_lab`. The architecture is
 split between experiment modes, coordination primitives, instrumentation,
 evaluation tooling, and curated experiment evidence.
 
